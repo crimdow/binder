@@ -57,6 +57,8 @@ img{max-width:100%}
 :root[data-skin="halloween"][data-pb="dark"]{ --bg:#17151b; --ink:#f1e8dd; --muted:#8f8797; --hair:#2b2731; --ash:#e0645a; --ben:#8a78e6; --chip:#26222c; --today:#ff7a1a; --field:#211e26; --sheet:#211e26; --accent:#ff7a1a; --on-accent:#17151b; --lyr:#8a78e6; --sto:#e0645a; --chd:#ff7a1a }
 body[data-type="stories"]{--sec:var(--sto)}
 body[data-type="chords"]{--sec:var(--chd)}
+:root{--rec:#3f9a66} :root[data-pb="dark"]{--rec:#5cb683}
+body[data-type="recipes"]{--sec:var(--rec)}
 
 *,*::before,*::after{box-sizing:border-box}
 html{height:100%;background:var(--bg)}
@@ -99,7 +101,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .empty b{display:block;color:var(--ink);font-size:17px;margin-bottom:2px}
 
 /* round + button */
-.fab{position:fixed;z-index:6;bottom:calc(96px + env(safe-area-inset-bottom,0px));right:max(16px,calc(50% - 234px));width:56px;height:56px;border-radius:28px;border:0;padding:0;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 38%,transparent),0 2px 6px rgba(0,0,0,.12);transition:transform .15s,background-color .35s}
+.fab{position:fixed;z-index:6;bottom:calc(112px + env(safe-area-inset-bottom,0px));right:max(16px,calc(50% - 234px));width:56px;height:56px;border-radius:28px;border:0;padding:0;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 38%,transparent),0 2px 6px rgba(0,0,0,.12);transition:transform .15s,background-color .35s}
 .fab:active{transform:scale(.92)}
 .fab svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round}
 
@@ -107,7 +109,9 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .bottom{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:.5px solid var(--hair);padding:0 12px calc(8px + env(safe-area-inset-bottom,0px))}
 .dividers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:500px;margin:0 auto;align-items:start}
 .div{--c:var(--lyr);position:relative;border:0;background:var(--chip);color:var(--muted);border-radius:0 0 14px 14px;padding:12px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .22s cubic-bezier(.3,1.4,.5,1),background-color .25s,color .25s}
-.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)}
+.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)} .div[data-t="recipes"]{--c:var(--rec)}
+.dividers.four{grid-template-columns:repeat(4,1fr)}
+.dividers.four .amptabs{display:none}
 .div::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);opacity:.55;transition:opacity .2s}
 .div svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .div b{font-size:12px;font-weight:800;letter-spacing:.2px}
@@ -142,6 +146,24 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .field{display:block;margin-top:14px}
 .field>span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px}
 .field input,.field textarea{width:100%;border:0;border-radius:10px;background:var(--field);font-size:16px;padding:10px 12px;-webkit-appearance:none;appearance:none}
+#typePick.four{grid-template-columns:repeat(4,1fr)}
+#recBox .field textarea{min-height:140px;white-space:pre-wrap;font-family:var(--f-ui);font-size:15px}
+#recBox #fNote{min-height:70px}
+.recacts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.recacts button{border:0;border-radius:16px;background:color-mix(in srgb,var(--rec) 16%,var(--bg));color:var(--rec);font-size:14px;font-weight:700;padding:8px 14px}
+.rbody.recipes h4{margin:18px 0 8px;font-size:13px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.rbody.recipes ul.ing{margin:0;padding:0;list-style:none}
+.rbody.recipes ul.ing li{padding:8px 0;border-bottom:.5px solid var(--hair);font-size:calc(17px*var(--fs));line-height:1.4}
+.rbody.recipes ol.steps{margin:0;padding-left:24px}
+.rbody.recipes ol.steps li{margin:0 0 12px;font-size:calc(17px*var(--fs));line-height:1.5;padding-left:4px}
+.rbody.recipes .stephead{font-weight:800;margin:14px 0 8px;font-size:calc(16px*var(--fs))}
+.rbody.recipes p.rnote{color:var(--muted);font-size:calc(15px*var(--fs));line-height:1.5;white-space:pre-wrap}
+.picklist{list-style:none;margin:6px 0 0;padding:0}
+.picklist label{display:flex;gap:12px;align-items:flex-start;padding:10px 4px;border-bottom:.5px solid var(--hair);font-size:16px;line-height:1.35}
+.picklist input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--rec)}
+.daypick{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.daypick button{border:0;border-radius:12px;background:var(--chip);color:var(--ink);font-size:15px;font-weight:700;padding:12px 0}
+.daypick button[aria-pressed="true"]{background:var(--rec);color:#fff}
 .field textarea{min-height:220px;font-family:var(--f-mono);font-size:13px;line-height:1.45;resize:vertical;white-space:pre;overflow-x:auto}
 .field input:focus,.field textarea:focus{outline:2px solid var(--ben)}
 .ftitle{font-size:20px!important;font-weight:700}
@@ -226,46 +248,6 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .gate .err{color:var(--ash);font-size:15px;min-height:1.3em;margin:0;text-align:center}
 .signout{width:100%;border:0;border-radius:12px;background:var(--chip);color:var(--ash);font:inherit;font-size:16px;font-weight:700;padding:12px;cursor:pointer}
 .acct{color:var(--muted);font-size:14px;margin:0 4px 8px}
-
-/* ---- phones: no accidental zoom (same as Home Board) ---- */
-html,body{touch-action:manipulation}
-@media (pointer:coarse){ .field textarea{font-size:16px} }   /* iOS zooms into any box under 16px */
-
-/* ---- desktop: binder tabs down the left edge, wider reading column ---- */
-@media (min-width:900px) and (pointer:fine){
-  .wrap{max-width:1080px;padding-inline:32px;padding-block:8px 120px;margin-left:220px;margin-right:auto}
-  .top{margin-inline:-32px;padding-inline:32px}
-  .dtags{margin-inline:-32px;padding-inline:32px}
-  .dlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:28px}
-  .item{min-height:68px}
-  .item:hover .name{color:var(--sec)}
-  .bottom{top:0;right:auto;width:220px;border-top:0;border-right:.5px solid var(--hair);padding:calc(24px + env(safe-area-inset-top,0px)) 0 24px 14px;display:flex;gap:10px}
-  .rings{flex-direction:column;justify-content:flex-start;gap:52px;padding:22px 0 0}
-  .dividers{grid-template-columns:1fr;gap:8px;margin:0;max-width:none;flex:1;align-content:start}
-  .div{flex-direction:row;justify-content:flex-start;gap:10px;padding:14px 14px;border-radius:14px 0 0 14px;text-align:left}
-  .div::before{left:auto;right:0;top:0;bottom:0;width:4px;height:auto}
-  .div b{font-size:14px}
-  .div i{margin-left:auto}
-  .div[aria-selected="true"]{transform:translateX(6px);border-radius:14px 0 0 14px}
-  .div[aria-selected="true"]::before{width:5px;height:auto;border-radius:0}
-  .fab{right:32px;bottom:32px}
-  .undo{left:auto;right:32px;bottom:104px;max-width:420px}
-  .toast{bottom:104px}
-  .sheet{top:50%;bottom:auto;max-width:600px;max-height:86%;transform:translate(-50%,-50%);border-radius:22px;padding:8px 24px 24px}
-  .sheet .grab{display:none}
-  .field textarea{min-height:340px}
-  .dbody{max-width:780px;padding-inline:32px}
-  .reader h2{font-size:34px}
-  .rbody.lyrics{font-size:calc(21px * var(--fs))}
-  .rbody.stories{font-size:calc(19px * var(--fs));max-width:68ch}
-  .rbody.chords{font-size:calc(16px * var(--fs))}
-  .pagewrap,.chordwrap{margin-inline:0;padding-inline:0}
-  .rtools .in{max-width:780px}
-}
-@media (min-width:900px) and (pointer:fine) and (prefers-reduced-motion:no-preference){
-  .sheet{animation:pop .22s ease-out}
-  @keyframes pop{from{transform:translate(-50%,-46%);opacity:.5}to{transform:translate(-50%,-50%);opacity:1}}
-}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -319,7 +301,11 @@ html,body{touch-action:manipulation}
     </button>
     <button class="div" role="tab" data-t="chords" id="tab-chords">
       <svg viewBox="0 0 24 24"><path d="M5 3v18M10 3v18M15 3v18M20 3v18M5 7h15M5 12h15M5 17h15"/><circle cx="10" cy="9.5" r="1.4" fill="currentColor"/><circle cx="15" cy="14.5" r="1.4" fill="currentColor"/></svg>
-      <b>Chords &amp; Tabs</b><i id="n-chords">0</i>
+      <b>Chords<span class="amptabs"> &amp; Tabs</span></b><i id="n-chords">0</i>
+    </button>
+    <button class="div" role="tab" data-t="recipes" id="tab-recipes" hidden>
+      <svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg>
+      <b>Recipes</b><i id="n-recipes">0</i>
     </button>
   </div>
 </nav>
@@ -360,16 +346,22 @@ html,body{touch-action:manipulation}
       <button type="button" data-t="lyrics" id="tp-lyrics">Lyrics</button>
       <button type="button" data-t="stories" id="tp-stories">Story</button>
       <button type="button" data-t="chords" id="tp-chords">Chords/Tabs</button>
+      <button type="button" data-t="recipes" id="tp-recipes" hidden>Recipe</button>
     </div>
     <div id="attachBox" hidden>
-      <h3>Sheet music &amp; photos</h3>
+      <h3 id="attachHead">Sheet music &amp; photos</h3>
       <ul class="flist" id="edFiles"></ul>
       <button type="button" class="upbig" id="attachBtn"><svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>Upload PDF or photos</button>
     </div>
-    <label class="field"><span id="bodyLbl">Paste the page</span>
+    <div id="recBox" hidden>
+      <label class="field"><span>Ingredients · one per line</span><textarea id="fIng" placeholder="2 cups flour&#10;1 tsp salt"></textarea></label>
+      <label class="field"><span>Steps · one per line</span><textarea id="fSteps" placeholder="Heat the oven to 375°F&#10;Mix the dry ingredients"></textarea></label>
+      <label class="field"><span>Notes</span><textarea id="fNote" placeholder="Optional"></textarea></label>
+    </div>
+    <label class="field" id="bodyField"><span id="bodyLbl">Paste the page</span>
       <textarea id="fBody" placeholder="Long-press here and tap Paste. Copy the whole page if you like; Tidy strips the clutter."></textarea>
     </label>
-    <div class="acts">
+    <div class="acts" id="actsRow">
       <button type="button" class="dtag" id="pasteBtn" hidden>Paste</button>
       <button type="button" class="dtag" id="tidyBtn">Tidy text</button>
       <button type="button" class="dtag" id="untrimBtn" hidden>Undo trim</button>
@@ -378,7 +370,7 @@ html,body{touch-action:manipulation}
     <div class="hint" id="tidyNote"></div>
     <label class="field"><span>Title</span><input id="fTitle" class="ftitle" required></label>
     <div class="two">
-      <label class="field"><span id="fByLbl">Artist</span><input id="fBy"></label>
+      <label class="field" id="byField"><span id="fByLbl">Artist</span><input id="fBy"></label>
       <label class="field"><span>Genre</span><input id="fGenre" list="genreList" placeholder="Optional"></label>
     </div>
     <datalist id="genreList"></datalist>
@@ -479,26 +471,105 @@ function titleOf(){
   if(og && og.content) return og.content.trim();
   return document.title.split(/\s+[|·•]\s+/)[0].trim();
 }
-var KEY = 'Bl6tjT9zmJyh6ESispnMrQdv';   // must match the Create rule on the clip_inbox collection
-var enc = encodeURIComponent, title = '', text = '';
+// Site readers: exact lyrics for sites the general reader gets wrong. Each returns {text, title} or null.
+var GENIUS_BOX = '[data-lyrics-container="true"],[class^="Lyrics__Container"],[class*=" Lyrics__Container"]';
+function geniusText(){
+  var cs = document.querySelectorAll(GENIUS_BOX), parts = [];
+  for(var i = 0; i < cs.length; i++){
+    var c = cs[i], out = '';
+    (function walk(x){
+      if(x.nodeType === 3){ out += x.nodeValue; return }
+      if(x.nodeType !== 1) return;
+      if(x.matches('[data-exclude-from-selection],script,style,noscript,svg,button,img')) return;   // "Contributors" header, avatars
+      if(x.tagName === 'BR'){ out += '\n'; return }
+      for(var k = x.firstChild; k; k = k.nextSibling) walk(k);
+      if(/^(DIV|P)$/.test(x.tagName) && x !== c) out += '\n';
+    })(c);
+    out = out.replace(/[ \t]+\n/g, '\n').replace(/^\s+|\s+$/g, ''); if(out) parts.push(out);
+  }
+  return parts.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+function siteReader(){
+  var h = location.hostname;
+  if(/(^|\.)genius\.com$/.test(h) && document.querySelector(GENIUS_BOX)){
+    var og = document.querySelector('meta[property="og:title"]');   // "Artist – Song"
+    return { text: geniusText(), title: og && og.content ? og.content.trim() : '' };
+  }
+  return null;
+}
+// Recipe pages: nearly every recipe site embeds the recipe as schema.org data. Read that instead of the page.
+function plain(v){ try{ return (new DOMParser().parseFromString(String(v == null ? '' : v), 'text/html').body.textContent || '').replace(/\s+/g, ' ').trim() }catch(e){ return String(v || '').trim() } }
+function findRecipe(){
+  var found = null;
+  function isRecipe(o){ var t = o && o['@type']; return t === 'Recipe' || (Array.isArray(t) && t.indexOf('Recipe') >= 0) }
+  function walk(o){
+    if(found || !o || typeof o !== 'object') return;
+    if(Array.isArray(o)){ for(var i = 0; i < o.length; i++) walk(o[i]); return }
+    if(isRecipe(o)){ found = o; return }
+    if(o['@graph']) walk(o['@graph']);
+    if(o.mainEntity) walk(o.mainEntity);
+  }
+  var ss = document.querySelectorAll('script[type="application/ld+json"]');
+  for(var i = 0; i < ss.length && !found; i++){ try{ walk(JSON.parse(ss[i].textContent)) }catch(e){} }
+  if(!found) return null;
+  var steps = [];
+  (function st(x){
+    if(!x) return;
+    if(typeof x === 'string'){ x.split(/\n+/).forEach(function(l){ l = plain(l); if(l) steps.push(l) }); return }
+    if(Array.isArray(x)){ for(var i = 0; i < x.length; i++) st(x[i]); return }
+    if(x.itemListElement){ if(x.name) steps.push('— ' + plain(x.name) + ' —'); st(x.itemListElement); return }   // section heading
+    if(x.text) steps.push(plain(x.text)); else if(x.name) steps.push(plain(x.name));
+  })(found.recipeInstructions);
+  var img = found.image; if(Array.isArray(img)) img = img[0]; if(img && typeof img === 'object') img = img.url || img.contentUrl;
+  var y = found.recipeYield; if(Array.isArray(y)) y = y[0];
+  var ings = [].concat(found.recipeIngredient || found.ingredients || []).map(plain).filter(Boolean);
+  return { name: plain(found.name), ingredients: ings, steps: steps, image: typeof img === 'string' ? img : '', yield: y ? plain(y) : '', total: found.totalTime || '' };
+}
+var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
+var enc = encodeURIComponent, title = '', text = '', kind = '';
+// Always hand Shortcuts a link, even if this page breaks the script or the server is slow
+var sent = false;
+function finish(url){ if(!sent){ sent = true; completion(url) } }
+setTimeout(function(){ finish(BINDER + '#add&t=' + enc((title || document.title || '').slice(0, 200)) + '&u=' + enc(location.href) + '&nx=1') }, 6000);
 try{
-  var useClass = true, best = pickBest(true);
-  if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
-  text = best.el ? toText(best.el, useClass) : '';
-  if(text.length < 40) text = (document.body.innerText || '').trim();
-  title = titleOf();
+  var recipe = null; try{ recipe = findRecipe() }catch(e){}
+  if(recipe && (recipe.ingredients.length || recipe.steps.length)){ kind = 'recipe'; title = recipe.name || titleOf(); text = JSON.stringify(recipe) }
+  else {
+  var site = siteReader();
+  if(site && site.text.length >= 20){ text = site.text; title = site.title || titleOf() }
+  else {
+    var useClass = true, best = pickBest(true);
+    if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
+    text = best.el ? toText(best.el, useClass) : '';
+    if(text.length < 40) text = (document.body.innerText || '').trim();
+    title = titleOf();
+  }
+  }
 }catch(e){}
+title = (title || '').replace(/\s+/g, ' ').trim();   // Genius and others use non-breaking spaces in names
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
-fetch(BINDER + 'api/collections/clip_inbox/records', {
-  method: 'POST', headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
-}).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
-  .then(function(rec){ completion(BINDER + '#add&clip=' + rec.id) })
-  .catch(function(){ completion(short + '&nx=1') });
+try{
+  fetch(BINDER + 'api/collections/clip_inbox/records', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: KEY, k: kind, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
+  }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
+    .then(function(rec){ finish(BINDER + '#add&clip=' + rec.id) })
+    .catch(function(){ finish(short + '&nx=1') });
+}catch(e){ finish(short + '&nx=1') }
 </script>
     <h3>Account</h3>
     <p class="acct" id="acct"></p>
     <button type="button" class="signout" id="signOut">Sign out</button>
+  </div>
+</div>
+
+<!-- small picker sheet: ingredients to Groceries, recipe to Meals -->
+<div id="pick" hidden>
+  <div class="scrim" id="pickScrim"></div>
+  <div class="sheet" role="dialog" aria-labelledby="pickTitle">
+    <div class="grab"></div>
+    <div class="sh-head"><button type="button" class="linkbtn" id="pickCancel">Cancel</button><h2 id="pickTitle"></h2><button type="button" class="linkbtn strong" id="pickGo">Add</button></div>
+    <div id="pickBody"></div>
   </div>
 </div>
 
@@ -545,8 +616,10 @@ fetch(BINDER + 'api/collections/clip_inbox/records', {
 const TYPES = {
   lyrics: {label:'Lyrics', one:'lyric sheet', who:'Artist'},
   stories:{label:'Stories', one:'story', who:'Author'},
-  chords: {label:'Chords & Tabs', one:'chord chart', who:'Artist'}
+  chords: {label:'Chords & Tabs', one:'chord chart', who:'Artist'},
+  recipes:{label:'Recipes', one:'recipe', who:'From'}   // Home Board's own recipe list, shared with its Recipes page
 };
+const CLIP_TYPES = ['lyrics','stories','chords'];
 const SKINS = [
   {k:'', n:'Classic', dots:['#4f7bd4','#8a6bb8','#c98a3e']},
   {k:'barbie', n:'Barbie', dots:['#e0218a','#5b7fd6','#f0d5e1']},
@@ -630,8 +703,92 @@ $('gateForm').addEventListener('submit', async e => {
 });
 $('signOut').addEventListener('click', () => {
   try{ pb.collection('clips').unsubscribe() }catch{}
-  pb.authStore.clear(); S.items = []; store = null; assets = null; closeMore && closeMore(); render(); showGate();
+  try{ pb.collection('recipes').unsubscribe() }catch{}
+  pb.authStore.clear(); S.items = []; S.clipKey = ''; store = null; assets = null; closeMore && closeMore(); render(); showGate();
 });
+/* ---------- recipes: Home Board's "recipes" table ---------- */
+const WEEK = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function recToItem(r){
+  const note = r.note || '', m = note.match(/(?:^|\n)Source:\s*(https?:\/\/\S+)\s*$/);
+  const photos = Array.isArray(r.photos) ? r.photos.filter(f => f && f.id) : [];
+  photos.forEach(f => { if(f.path) FILEURL[f.id] = f.path });
+  return { id:r.id, type:'recipes', title:r.name || '', by:'', genre:(Array.isArray(r.tags) && r.tags[0]) || '', tags:Array.isArray(r.tags) ? r.tags : [],
+    ingredients:r.ingredients || '', steps:r.steps || '', note: m ? note.slice(0, m.index).trim() : note, src: m ? m[1] : '',
+    files: photos, body:'', added: Date.parse(r.created_at || '') || Date.parse((r.created || '').replace(' ', 'T')) || 0,
+    updated: Date.parse(r.updated_at || '') || 0 };
+}
+async function loadRecipes(){
+  const on = !!(me() && me().household);
+  $('tab-recipes').hidden = $('tp-recipes').hidden = !on;
+  document.querySelector('.dividers').classList.toggle('four', on);
+  $('typePick').classList.toggle('four', on);
+  if(!on){ if(S.type === 'recipes'){ S.type = 'lyrics'; render() } return }
+  try{
+    const list = await pb.collection('recipes').getFullList();
+    S.items = S.items.filter(x => x.type !== 'recipes').concat(list.map(recToItem)); render();
+  }catch{ toast('Couldn’t load recipes.') }
+  pb.collection('recipes').subscribe('*', ev => {
+    if(ev.action === 'delete'){ S.items = S.items.filter(x => x.id !== ev.record.id); render() }
+    else keepLocal(recToItem(ev.record));
+  }).catch(() => {});
+}
+function cleanLines(v){ return String(v || '').split('\n').map(l => l.replace(/\s+$/, '')).filter(l => l.trim()).join('\n') }
+async function saveRecipe(it){
+  const col = pb.collection('recipes'), now = new Date().toISOString();
+  const tags = [it.genre, ...((it.tags || []).slice(1))].filter(Boolean).filter((t, i, a) => a.indexOf(t) === i);
+  const data = { name: it.title, ingredients: cleanLines(it.ingredients), steps: cleanLines(it.steps),
+    note: [String(it.note || '').trim(), it.src ? 'Source: ' + it.src : ''].filter(Boolean).join('\n\n'),
+    tags, photos: (it.files || []).map(({id, type, name, size, path}) => ({id, type, name, size, path: path || FILEURL[id] || ''})), updated_at: now };
+  let rec;
+  if(it.id){
+    try{ rec = await col.update(it.id, data) }
+    catch(e){ if(e?.status !== 404) throw e; rec = await col.create({...(/^[a-z0-9]{15}$/.test(it.id) ? {id: it.id} : {}), ...data, pinned: false, created_at: now}) }   // Undo puts a deleted one back
+  } else rec = await col.create({...data, pinned: false, created_at: now});
+  keepLocal(recToItem(rec)); return rec.id;
+}
+async function removeRecipe(id){ await pb.collection('recipes').delete(id); S.items = S.items.filter(x => x.id !== id); render() }
+
+/* small picker sheet */
+const PICK = { go: null };
+function openPick(title, body, goLabel, onGo){
+  $('pickTitle').textContent = title; $('pickBody').textContent = ''; $('pickBody').appendChild(body);
+  $('pickGo').textContent = goLabel; PICK.go = onGo; $('pick').hidden = false;
+}
+function closePick(){ $('pick').hidden = true; PICK.go = null }
+function hbError(e, what){ return (e?.status === 400 || e?.status === 403) ? 'Only Home Board editors can add to ' + what + '.' : 'Couldn’t add to ' + what + '. Try again.' }
+function toGroceries(it){
+  const lines = String(it.ingredients || '').split('\n').map(l => l.trim()).filter(Boolean);
+  if(!lines.length){ toast('This recipe has no ingredients yet.'); return }
+  const ul = document.createElement('ul'); ul.className = 'picklist';
+  lines.forEach(l => { const li = document.createElement('li'), lab = document.createElement('label'), cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = true; cb.value = l; lab.append(cb, document.createTextNode(l)); li.appendChild(lab); ul.appendChild(li) });
+  const wrap = document.createElement('div');
+  const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = 'Untick anything you already have.';
+  wrap.append(hint, ul);
+  openPick('Add to Groceries', wrap, 'Add', async () => {
+    const pick = [...ul.querySelectorAll('input:checked')].map(c => c.value);
+    if(!pick.length){ closePick(); return }
+    const col = pb.collection('grocery_items'), now = new Date().toISOString();
+    try{
+      for(const name of pick) await col.create({name: name.slice(0, 300), store_id: '', note: 'For ' + it.title, done: false, created_at: now, updated_at: now});
+      closePick(); toast('Added ' + pick.length + ' to Groceries');
+    }catch(e){ toast(hbError(e, 'Groceries')) }
+  });
+}
+function toMeals(it){
+  let day = WEEK[(new Date().getDay() + 6) % 7];
+  const wrap = document.createElement('div'), grid = document.createElement('div'); grid.className = 'daypick';
+  const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = 'Which day this week?';
+  [...WEEK, ''].forEach(d => { const b = document.createElement('button'); b.type = 'button'; b.textContent = d || 'Not set';
+    b.setAttribute('aria-pressed', String(d === day)); b.onclick = () => { day = d; grid.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))) }; grid.appendChild(b) });
+  wrap.append(hint, grid);
+  openPick('Plan as a meal', wrap, 'Add', async () => {
+    const now = new Date().toISOString();
+    try{ await pb.collection('meals').create({name: it.title.slice(0, 300), note: '', day, done: false, created_at: now, updated_at: now}); closePick(); toast('Added to Meals' + (day ? ' for ' + day : '')) }
+    catch(e){ toast(hbError(e, 'Meals')) }
+  });
+}
+
 async function initStore(){
   if(!me()){ showGate(); return }
   try{ await pb.collection('users').authRefresh() }
@@ -653,14 +810,19 @@ async function initStore(){
     },
     async remove(id){ await col.delete(id); S.items = S.items.filter(x=>x.id!==id); render() }
   };
+  const saveClip = store.save, removeClip = store.remove;   // recipes go to Home Board's table instead
+  store.save = it => it.type === 'recipes' ? saveRecipe(it) : saveClip(it);
+  store.remove = id => (S.items.find(x => x.id === id) || {}).type === 'recipes' ? removeRecipe(id) : removeClip(id);
   try{
     const [list, files] = await Promise.all([col.getFullList({sort: '-added'}), pb.collection('binder_files').getFullList({fields: 'id,collectionId,file'})]);
     files.forEach(r => { FILEURL[r.id] = linkOf(r) });
     S.items = list.map(toItem); S.ready = true;
     $('status').textContent = me().household ? 'Shared with your family' : 'Synced across your devices';
+    loadClipKey().catch(() => {});
     loadClip();
     render();
   }catch(e){ $('status').textContent = 'Couldn’t load your binder. Reload to try again.'; return }
+  loadRecipes();
   col.subscribe('*', ev => {
     if(ev.action==='delete'){ S.items = S.items.filter(x=>x.id!==ev.record.id); render() }
     else keepLocal(toItem(ev.record));
@@ -675,6 +837,7 @@ function genresFor(type){
 }
 function render(){
   document.body.dataset.type = S.open ? S.open.type : S.type;
+  $('upBtn').hidden = !assets || S.type === 'recipes';   // bulk upload is for clippings; recipes add a photo in Edit
   for(const t in TYPES){
     $('tab-'+t).setAttribute('aria-selected', String(t===S.type));
     $('n-'+t).textContent = S.items.filter(x=>x.type===t).length;
@@ -707,9 +870,7 @@ function render(){
     const main = document.createElement('span'); main.className='main';
     const n = document.createElement('span'); n.className='name'; n.textContent = it.title || 'Untitled';
     if(it.example){ const e=document.createElement('span'); e.className='ex'; e.textContent='Example'; n.appendChild(e) }
-    const p = document.createElement('span'); p.className='prev';
-    p.textContent = [it.by, filesLabel(it.files)].filter(Boolean).join(' · ') || firstLine(it.body) || TYPES[it.type].one;
-    main.append(n,p); b.appendChild(main);
+    main.append(n); b.appendChild(main);   // list shows the title only: no artist, file note or text preview
     if(it.genre){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.genre; b.appendChild(m) }
     b.onclick = () => openReader(it);
     li.appendChild(b); list.appendChild(li);
@@ -783,6 +944,23 @@ function openReader(it){
 }
 function closeReader(){ setScroll(false); paintToken++; $('reader').hidden = true; S.open = null; keepAwake(false); render() }
 function tag(text, cls){ const s=document.createElement('span'); s.className='dtag'+(cls?' '+cls:''); s.textContent=text; return s }
+function paintRecipe(it, body){
+  const acts = document.createElement('div'); acts.className = 'recacts';
+  const g = document.createElement('button'); g.type = 'button'; g.textContent = '+ Groceries'; g.onclick = () => toGroceries(it);
+  const m = document.createElement('button'); m.type = 'button'; m.textContent = 'Plan as a meal'; m.onclick = () => toMeals(it);
+  acts.append(g, m); body.appendChild(acts);
+  const ing = String(it.ingredients || '').split('\n').map(l => l.trim()).filter(Boolean);
+  const st = String(it.steps || '').split('\n').map(l => l.trim()).filter(Boolean);
+  if(ing.length){ const h = document.createElement('h4'); h.textContent = 'Ingredients'; const ul = document.createElement('ul'); ul.className = 'ing';
+    ing.forEach(l => { const li = document.createElement('li'); li.textContent = l; ul.appendChild(li) }); body.append(h, ul) }
+  if(st.length){ const h = document.createElement('h4'); h.textContent = 'Steps'; body.appendChild(h); let ol = null;
+    st.forEach(l => { const head = l.match(/^—\s*(.+?)\s*—$/) || l.match(/^#+\s*(.+)$/);
+      if(head){ const d = document.createElement('div'); d.className = 'stephead'; d.textContent = head[1]; body.appendChild(d); ol = null; return }
+      if(!ol){ ol = document.createElement('ol'); ol.className = 'steps'; body.appendChild(ol) }
+      const li = document.createElement('li'); li.textContent = l; ol.appendChild(li) }) }
+  if(String(it.note || '').trim()){ const h = document.createElement('h4'); h.textContent = 'Notes'; const p = document.createElement('p'); p.className = 'rnote'; p.textContent = it.note.trim(); body.append(h, p) }
+  if(!ing.length && !st.length && !String(it.note || '').trim()){ const p = document.createElement('p'); p.className = 'rnote'; p.textContent = 'Nothing written yet. Tap Edit to add ingredients and steps.'; body.appendChild(p) }
+}
 function paintReader(){
   const it = S.open; if(!it) return;
   document.body.dataset.type = it.type;
@@ -806,6 +984,7 @@ function paintReader(){
 function paintBody(){
   const it = S.open, body = $('rBody');
   body.className = 'rbody ' + it.type; body.textContent = '';
+  if(it.type === 'recipes'){ paintRecipe(it, body); return }
   const text = (it.body||'').replace(/\r\n?/g,'\n');
   if(it.type==='stories'){
     let paras = text.split(/\n\s*\n/);
@@ -913,6 +1092,29 @@ function splitTitle(t){
   return {title:t, by:''};
 }
 /* #add&t=title&u=link&x=text — sent by the Share Sheet shortcut */
+function isoMinutes(d){   // "PT1H15M" -> "1 hr 15 min"
+  const m = String(d || '').match(/^P(?:\d+D)?T?(?:(\d+)H)?(?:(\d+)M)?/i); if(!m || (!m[1] && !m[2])) return '';
+  return [m[1] ? m[1] + ' hr' : '', m[2] && +m[2] ? m[2] + ' min' : ''].filter(Boolean).join(' ');
+}
+function prefillRecipe(r){
+  let rec = null; try{ rec = JSON.parse(r.x || '') }catch{}
+  if(!rec){ prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: ''})); return }
+  S.typeTouched = true; setEdType('recipes');
+  $('fTitle').value = rec.name || r.t || '';
+  $('fIng').value = (rec.ingredients || []).join('\n');
+  $('fSteps').value = (rec.steps || []).join('\n');
+  $('fNote').value = [rec.yield ? 'Makes ' + rec.yield : '', isoMinutes(rec.total) ? 'Total ' + isoMinutes(rec.total) : ''].filter(Boolean).join(' · ');
+  if(r.u) $('fSrc').value = r.u;
+  let host = ''; try{ host = new URL(r.u).hostname.replace(/^www\./, '') }catch{}
+  $('tidyNote').textContent = (host ? 'Recipe from ' + host + '. ' : '') + 'Check it, then Save.';
+  if(rec.image){   // the server fetches and keeps the photo
+    const row = {name: 'Photo', type: 'image/jpeg', size: 0, pending: true};
+    S.edFiles.push(row); paintEdFiles();
+    pb.send('/api/binder/photo', {method: 'POST', body: {url: rec.image}}).then(up => {
+      Object.assign(row, up, {pending: false}); FILEURL[up.id] = up.path; S.edNew.push(up.id); paintEdFiles();
+    }).catch(() => { S.edFiles = S.edFiles.filter(f => f !== row); paintEdFiles(); $('tidyNote').textContent += ' The photo couldn’t be saved.' });
+  }
+}
 function prefillFromClip(q){
   const x = q.get('x') || '', t = (q.get('t') || '').trim(), u = (q.get('u') || '').trim();
   let body = tidy(x).out;
@@ -943,6 +1145,9 @@ function guessMeta(txt){
 }
 function setEdType(t){
   S.edType = t;
+  const rec = t === 'recipes';
+  $('recBox').hidden = !rec; $('bodyField').hidden = $('actsRow').hidden = $('byField').hidden = rec;
+  $('attachHead').textContent = rec ? 'Photo' : 'Sheet music & photos';
   for(const k in TYPES) $('tp-'+k).setAttribute('aria-pressed', String(k===t));
   $('fByLbl').textContent = TYPES[t].who;
   document.body.dataset.type = t;
@@ -959,6 +1164,10 @@ function openEditor(it, quiet){
   $('fSrc').value = it ? it.src||'' : '';
   $('tidyNote').textContent = '';
   S.edFiles = it && it.files ? it.files.map(f=>({...f})) : []; S.edNew = [];
+  $('fIng').value = it ? it.ingredients || '' : ''; $('fSteps').value = it ? it.steps || '' : ''; $('fNote').value = it ? it.note || '' : '';
+  // a recipe stays a recipe (it lives in Home Board's list); a clipping can't become one
+  CLIP_TYPES.forEach(k => { $('tp-'+k).hidden = !!(it && it.type === 'recipes') });
+  $('tp-recipes').hidden = !(me() && me().household) || !!(it && it.type !== 'recipes');
   paintEdFiles();
   setEdType(it ? it.type : S.type);
   $('editor').hidden = false;
@@ -1148,7 +1357,7 @@ async function attachFiles(list){
 /* bulk upload sheet */
 const UP = { files:[], type:'chords', mode:'each', busy:false };
 function openUpSheet(files){
-  UP.files = sortFiles(files); UP.type = S.type; UP.mode = 'each'; UP.busy = false;
+  UP.files = sortFiles(files); UP.type = CLIP_TYPES.includes(S.type) ? S.type : 'chords'; UP.mode = 'each'; UP.busy = false;
   const first = titleFromName(UP.files[0].name);
   $('upName').value = first.title; $('upBy').value = first.by; $('upGenre').value = '';
   $('upNote').textContent = ''; $('upProg').hidden = true; $('upBar').style.width = '0';
@@ -1156,7 +1365,7 @@ function openUpSheet(files){
   $('upSheet').hidden = false;
 }
 function paintUpSheet(){
-  for(const t in TYPES) $('ut-'+t).setAttribute('aria-pressed', String(t===UP.type));
+  for(const t of CLIP_TYPES) $('ut-'+t).setAttribute('aria-pressed', String(t===UP.type));
   $('um-each').setAttribute('aria-pressed', String(UP.mode==='each'));
   $('um-one').setAttribute('aria-pressed', String(UP.mode==='one'));
   document.body.dataset.type = UP.type;
@@ -1244,25 +1453,43 @@ $('pasteBtn').onclick = async () => {
     $('fBody').value = txt; afterPaste();
   }catch{ toast('Allow paste, or long-press the box and tap Paste') }
 };
+/* The shortcut's key lives on the server (clip_keys), never in these public files.
+   It's fetched (or made, the first time) at sign-in so the Copy tap can write the clipboard straight away. */
+async function loadClipKey(){
+  if(!me()) return '';
+  const col = pb.collection('clip_keys');
+  const have = await col.getList(1, 1);
+  if(have.items.length) return S.clipKey = have.items[0].key;
+  const a = new Uint8Array(18); crypto.getRandomValues(a);
+  const key = Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
+  const r = await col.create({owner: me().id, household: me().household || '', key});
+  return S.clipKey = r.key;
+}
 $('copyClip').onclick = async () => {
-  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/');
+  if(!S.clipKey){
+    try{ await loadClipKey(); toast('Ready. Tap Copy shortcut script again.') }catch{ toast('Couldn’t get your shortcut key. Check your connection and try again.') }
+    return;
+  }
+  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/').replace('__CLIP_KEY__', S.clipKey);
   try{ await navigator.clipboard.writeText(src); toast('Script copied. Paste it into Run JavaScript on Web Page.') }
-  catch{ toast('Couldn’t copy. Open binder.jermins.com/clipper.js and copy it from there.') }
+  catch{ toast('Couldn’t copy. Try again.') }
 };
 $('untrimBtn').onclick = () => { if(S.preTrim!=null){ $('fBody').value = S.preTrim; S.preTrim = null; $('untrimBtn').hidden = true; $('tidyNote').textContent = 'Put the full text back.' } };
 $('tidyBtn').onclick = () => { const r = tidy($('fBody').value); $('fBody').value = r.out; r.removed += trimToMain(); $('tidyNote').textContent = r.removed ? 'Removed '+r.removed+' clutter line'+(r.removed>1?'s':'')+'.' : 'Already tidy.' };
 $('guessBtn').onclick = () => { if(!autoFill()) $('tidyNote').textContent = 'No title on the first line. Type it in.' };
 $('form').addEventListener('submit', async e => {
   e.preventDefault();
-  const title = $('fTitle').value.trim();
-  const body = tidy($('fBody').value).out;
+  const title = $('fTitle').value.trim(), isRec = S.edType === 'recipes';
+  const body = isRec ? '' : tidy($('fBody').value).out;
   if(S.edFiles.some(f=>f.pending)){ toast('Wait for uploads to finish'); return }
-  const files = S.edFiles.filter(f=>!f.err).map(({id,type,name,size})=>({id,type,name,size}));
-  if(!body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
+  const files = S.edFiles.filter(f=>!f.err).map(({id,type,name,size,path})=>(path ? {id,type,name,size,path} : {id,type,name,size}));
+  if(isRec){ if(!$('fIng').value.trim() && !$('fSteps').value.trim()){ $('fIng').focus(); toast('Add ingredients or steps first'); return } }
+  else if(!body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
   if(!title){ $('fTitle').focus(); toast('Add a title first'); return }
   const prev = S.editing;
   const it = { ...(prev||{}), type:S.edType, title, by:$('fBy').value.trim(), genre:$('fGenre').value.trim(),
     src:$('fSrc').value.trim(), body, files, added: prev?.added || Date.now(), updated: Date.now() };
+  if(isRec) Object.assign(it, { by: '', ingredients: $('fIng').value, steps: $('fSteps').value, note: $('fNote').value });
   if(prev && prev.example) delete it.example;
   $('edSave').disabled = true;
   try{
@@ -1273,7 +1500,7 @@ $('form').addEventListener('submit', async e => {
     if(S.open){ S.open = it; paintReader() }
     toast(prev ? 'Saved' : 'Added to '+TYPES[it.type].label);
   }catch(err){
-    toast(err?.code==='invalid_argument' ? 'You can read this binder but not change it.' : err?.code==='quota_exceeded' ? 'The binder is full. Delete a few clippings, then save.' : 'Couldn’t save. Check your connection and try again.');
+    toast(isRec && (err?.status===400 || err?.status===403) ? 'Only Home Board editors can change recipes.' : err?.code==='invalid_argument' ? 'You can read this binder but not change it.' : err?.code==='quota_exceeded' ? 'The binder is full. Delete a few clippings, then save.' : 'Couldn’t save. Check your connection and try again.');
   }finally{ $('edSave').disabled = false }
 });
 
@@ -1283,15 +1510,22 @@ $('attachBtn').onclick = () => { pickFor = 'editor'; $('filePick').click() };
 $('filePick').onchange = e => {
   const list = [...e.target.files]; e.target.value = '';
   if(!list.length || !assets) return;
-  if(pickFor==='editor') attachFiles(list);
+  if(pickFor==='editor'){
+    // Several files picked for a brand-new, empty clipping: offer one clipping per file instead of one with many pages
+    const blank = !S.editing && !S.edFiles.length && !$('fBody').value.trim() && !$('fTitle').value.trim();
+    if(list.length > 1 && blank){ const t = S.edType || S.type; closeEditor(); openUpSheet(list); UP.type = t; paintUpSheet() }
+    else attachFiles(list);
+  }
   else if(list.length===1){ openEditor(null); attachFiles(list) }
   else openUpSheet(list);
 };
-for(const t in TYPES) $('ut-'+t).onclick = () => { if(!UP.busy){ UP.type = t; paintUpSheet() } };
+for(const t of CLIP_TYPES) $('ut-'+t).onclick = () => { if(!UP.busy){ UP.type = t; paintUpSheet() } };
 $('um-each').onclick = () => { if(!UP.busy){ UP.mode = 'each'; paintUpSheet() } };
 $('um-one').onclick = () => { if(!UP.busy){ UP.mode = 'one'; paintUpSheet() } };
 $('upCancel').onclick = closeUpSheet; $('upScrim').onclick = closeUpSheet;
 $('upGo').onclick = runUpload;
+$('pickCancel').onclick = closePick; $('pickScrim').onclick = closePick;
+$('pickGo').onclick = async () => { if(!PICK.go) return; $('pickGo').disabled = true; try{ await PICK.go() }finally{ $('pickGo').disabled = false } };
 
 $('rBack').onclick = closeReader;
 $('rEdit').onclick = () => openEditor(S.open);
@@ -1341,7 +1575,13 @@ async function loadClip(){
   S.pendingClip = null;
   try{
     const r = await pb.collection('clip_inbox').getOne(id);
-    prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: r.x || ''}));
+    if(r.k === 'recipe' && me().household) prefillRecipe(r);
+    else if(r.k === 'recipe'){   // no Home Board household, so no recipe list: keep it as readable text
+      let rec = {}; try{ rec = JSON.parse(r.x || '{}') }catch{}
+      const x = ['Ingredients', ...(rec.ingredients || []), '', 'Steps', ...(rec.steps || []).map(l => l.replace(/^—\s*(.+?)\s*—$/, '$1:'))].join('\n');
+      prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x}));
+    }
+    else prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: r.x || ''}));
     pb.collection('clip_inbox').delete(id).catch(() => {});
   }catch{ $('tidyNote').textContent = 'Couldn’t load that clipping. Share the page again, or paste the text.' }
 }
@@ -1359,24 +1599,6 @@ function fromHash(){
   }
 }
 window.addEventListener('hashchange', fromHash);
-
-/* phones: block pinch and double-tap zoom like Home Board, except on sheet music pages; desktop zoom (Ctrl/⌘ +/-) is untouched */
-if(matchMedia('(pointer:coarse)').matches){
-  const allow = e => e.target && e.target.closest && e.target.closest('.pagewrap');
-  ['gesturestart','gesturechange'].forEach(t => document.addEventListener(t, e => { if(!allow(e)) e.preventDefault() }, {passive:false}));
-  document.addEventListener('dblclick', e => { if(!allow(e)) e.preventDefault() }, {passive:false});
-}
-/* desktop shortcuts: / search, N new, U upload, 1-3 sections */
-document.addEventListener('keydown', e => {
-  if(e.metaKey || e.ctrlKey || e.altKey) return;
-  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
-  if(typing || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || S.open || !$('gate').hidden) return;
-  const k = e.key.toLowerCase(), order = Object.keys(TYPES);
-  if(k==='/'){ e.preventDefault(); $('q').focus() }
-  else if(k==='n'){ e.preventDefault(); openEditor(null) }
-  else if(k==='u' && !$('upBtn').hidden){ e.preventDefault(); $('upBtn').click() }
-  else if(k>='1' && k<='3'){ S.type = order[+k-1]; ls.set('type', S.type); render() }
-});
 
 applyMode(); paintSkins();
 render(); fromHash(); initStore().then(initAssets);
