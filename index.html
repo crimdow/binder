@@ -440,8 +440,9 @@ function titleOf(){
   return document.title.split(/\s+[|·•]\s+/)[0].trim();
 }
 // Site readers: exact lyrics for sites the general reader gets wrong. Each returns {text, title} or null.
+var GENIUS_BOX = '[data-lyrics-container="true"],[class^="Lyrics__Container"],[class*=" Lyrics__Container"]';
 function geniusText(){
-  var cs = document.querySelectorAll('[data-lyrics-container="true"]'), parts = [];
+  var cs = document.querySelectorAll(GENIUS_BOX), parts = [];
   for(var i = 0; i < cs.length; i++){
     var c = cs[i], out = '';
     (function walk(x){
@@ -458,7 +459,7 @@ function geniusText(){
 }
 function siteReader(){
   var h = location.hostname;
-  if(/(^|\.)genius\.com$/.test(h) && document.querySelector('[data-lyrics-container="true"]')){
+  if(/(^|\.)genius\.com$/.test(h) && document.querySelector(GENIUS_BOX)){
     var og = document.querySelector('meta[property="og:title"]');   // "Artist – Song"
     return { text: geniusText(), title: og && og.content ? og.content.trim() : '' };
   }
@@ -704,9 +705,7 @@ function render(){
     const main = document.createElement('span'); main.className='main';
     const n = document.createElement('span'); n.className='name'; n.textContent = it.title || 'Untitled';
     if(it.example){ const e=document.createElement('span'); e.className='ex'; e.textContent='Example'; n.appendChild(e) }
-    const p = document.createElement('span'); p.className='prev';
-    p.textContent = [it.by, filesLabel(it.files)].filter(Boolean).join(' · ') || firstLine(it.body) || TYPES[it.type].one;
-    main.append(n,p); b.appendChild(main);
+    main.append(n); b.appendChild(main);   // list shows the title only: no artist, file note or text preview
     if(it.genre){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.genre; b.appendChild(m) }
     b.onclick = () => openReader(it);
     li.appendChild(b); list.appendChild(li);
