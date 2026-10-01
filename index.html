@@ -439,6 +439,31 @@ function titleOf(){
   if(og && og.content) return og.content.trim();
   return document.title.split(/\s+[|·•]\s+/)[0].trim();
 }
+// Site readers: exact lyrics for sites the general reader gets wrong. Each returns {text, title} or null.
+function geniusText(){
+  var cs = document.querySelectorAll('[data-lyrics-container="true"]'), parts = [];
+  for(var i = 0; i < cs.length; i++){
+    var c = cs[i], out = '';
+    (function walk(x){
+      if(x.nodeType === 3){ out += x.nodeValue; return }
+      if(x.nodeType !== 1) return;
+      if(x.matches('[data-exclude-from-selection],script,style,noscript,svg,button,img')) return;   // "Contributors" header, avatars
+      if(x.tagName === 'BR'){ out += '\n'; return }
+      for(var k = x.firstChild; k; k = k.nextSibling) walk(k);
+      if(/^(DIV|P)$/.test(x.tagName) && x !== c) out += '\n';
+    })(c);
+    out = out.replace(/[ \t]+\n/g, '\n').replace(/^\s+|\s+$/g, ''); if(out) parts.push(out);
+  }
+  return parts.join('\n').replace(/\n{3,}/g, '\n\n').trim();
+}
+function siteReader(){
+  var h = location.hostname;
+  if(/(^|\.)genius\.com$/.test(h) && document.querySelector('[data-lyrics-container="true"]')){
+    var og = document.querySelector('meta[property="og:title"]');   // "Artist – Song"
+    return { text: geniusText(), title: og && og.content ? og.content.trim() : '' };
+  }
+  return null;
+}
 var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
 var enc = encodeURIComponent, title = '', text = '';
 // Always hand Shortcuts a link, even if this page breaks the script or the server is slow
@@ -446,12 +471,17 @@ var sent = false;
 function finish(url){ if(!sent){ sent = true; completion(url) } }
 setTimeout(function(){ finish(BINDER + '#add&t=' + enc((title || document.title || '').slice(0, 200)) + '&u=' + enc(location.href) + '&nx=1') }, 6000);
 try{
-  var useClass = true, best = pickBest(true);
-  if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
-  text = best.el ? toText(best.el, useClass) : '';
-  if(text.length < 40) text = (document.body.innerText || '').trim();
-  title = titleOf();
+  var site = siteReader();
+  if(site && site.text.length >= 20){ text = site.text; title = site.title || titleOf() }
+  else {
+    var useClass = true, best = pickBest(true);
+    if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
+    text = best.el ? toText(best.el, useClass) : '';
+    if(text.length < 40) text = (document.body.innerText || '').trim();
+    title = titleOf();
+  }
 }catch(e){}
+title = (title || '').replace(/\s+/g, ' ').trim();   // Genius and others use non-breaking spaces in names
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
 try{
   fetch(BINDER + 'api/collections/clip_inbox/records', {
