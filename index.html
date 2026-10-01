@@ -1295,7 +1295,12 @@ $('attachBtn').onclick = () => { pickFor = 'editor'; $('filePick').click() };
 $('filePick').onchange = e => {
   const list = [...e.target.files]; e.target.value = '';
   if(!list.length || !assets) return;
-  if(pickFor==='editor') attachFiles(list);
+  if(pickFor==='editor'){
+    // Several files picked for a brand-new, empty clipping: offer one clipping per file instead of one with many pages
+    const blank = !S.editing && !S.edFiles.length && !$('fBody').value.trim() && !$('fTitle').value.trim();
+    if(list.length > 1 && blank){ const t = S.edType || S.type; closeEditor(); openUpSheet(list); UP.type = t; paintUpSheet() }
+    else attachFiles(list);
+  }
   else if(list.length===1){ openEditor(null); attachFiles(list) }
   else openUpSheet(list);
 };
