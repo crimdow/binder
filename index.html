@@ -9,7 +9,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Binder">
-<link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -386,17 +385,17 @@ var JUNK = /^(.*[-_])?(nav|menu|sidebar|widget|share|sharing|social|related|comm
 var ADS = /^(.*[-_])?(ad|ads|adsbygoogle|advert[a-z]*)([-_].*)?$/i;
 var MAIN = 'main,article,h1,[role="main"],.entry-content,.post-content,.lyrics,#lyrics';
 function ownJunk(e){
-  if(e.matches &amp;&amp; e.matches(SKIP)) return true;
+  if(e.matches && e.matches(SKIP)) return true;
   var toks = ((typeof e.className === 'string' ? e.className : '') + ' ' + (e.id || '')).split(/\s+/), hit = false;
-  for(var i = 0; i &lt; toks.length; i++) if(toks[i] &amp;&amp; (JUNK.test(toks[i]) || ADS.test(toks[i]))) hit = true;
-  return hit &amp;&amp; !e.querySelector(MAIN);   // a wrapper that holds the article is never junk
+  for(var i = 0; i < toks.length; i++) if(toks[i] && (JUNK.test(toks[i]) || ADS.test(toks[i]))) hit = true;
+  return hit && !e.querySelector(MAIN);   // a wrapper that holds the article is never junk
 }
 var memo = new Map();
 function junky(el, useClass){
-  for(var e = el; e &amp;&amp; e !== document.body; e = e.parentElement){
+  for(var e = el; e && e !== document.body; e = e.parentElement){
     var k = memo.get(e);
     if(k === undefined){ k = { skip: e.matches(SKIP), cls: ownJunk(e) }; memo.set(e, k) }
-    if(k.skip || (useClass &amp;&amp; k.cls)) return true;
+    if(k.skip || (useClass && k.cls)) return true;
   }
   return false;
 }
@@ -404,14 +403,14 @@ function pickBest(useClass){
   var score = new Map(), add = function(el, v){ if(el) score.set(el, (score.get(el) || 0) + v) };
   var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT), n;
   while((n = w.nextNode())){
-    var t = n.nodeValue.trim(); if(t.length &lt; 2) continue;
+    var t = n.nodeValue.trim(); if(t.length < 2) continue;
     var p = n.parentElement; if(!p || p.closest('a')) continue;
     if(!p.getClientRects().length || junky(p, useClass)) continue;
     var blk = p.closest('p,pre,li,td,blockquote,div,section,article,main,dd') || p;
     add(blk, t.length); add(blk.parentElement, t.length); if(blk.parentElement) add(blk.parentElement.parentElement, t.length / 2);
   }
   var best = null, top = 0;
-  score.forEach(function(v, el){ if(el !== document.body &amp;&amp; el !== document.documentElement &amp;&amp; v &gt; top){ top = v; best = el } });
+  score.forEach(function(v, el){ if(el !== document.body && el !== document.documentElement && v > top){ top = v; best = el } });
   return { el: best, score: top };
 }
 function toText(root, useClass){
@@ -420,12 +419,12 @@ function toText(root, useClass){
   function walk(x){
     if(x.nodeType === 3){ line += x.nodeValue.replace(/\s+/g, ' '); return }
     if(x.nodeType !== 1) return;
-    if(x !== root &amp;&amp; (x.matches(SKIP) || (useClass &amp;&amp; ownJunk(x)))) return;
+    if(x !== root && (x.matches(SKIP) || (useClass && ownJunk(x)))) return;
     if(x.tagName === 'BR'){ flush(); return }
     var d = getComputedStyle(x).display;
     if(d === 'none') return;
     if(x.tagName === 'PRE'){ flush(); x.textContent.replace(/\r/g, '').split('\n').forEach(function(l){ out.push({ t: l.replace(/\s+$/, ''), pre: true }) }); out.push({ t: '', pre: false }); return }
-    var block = !/^inline/.test(d) &amp;&amp; d !== 'contents';
+    var block = !/^inline/.test(d) && d !== 'contents';
     if(block) flush();
     for(var c = x.firstChild; c; c = c.nextSibling) walk(c);
     if(block){ flush(); if(/^(P|H[1-6]|BLOCKQUOTE|UL|OL|TABLE)$/.test(x.tagName)) out.push({ t: '', pre: false }) }
@@ -435,20 +434,27 @@ function toText(root, useClass){
 }
 function titleOf(){
   var h = document.querySelector('h1'), ht = h ? h.innerText.trim() : '';
-  if(ht &amp;&amp; ht.length &lt; 120) return ht;
+  if(ht && ht.length < 120) return ht;
   var og = document.querySelector('meta[property="og:title"]');
-  if(og &amp;&amp; og.content) return og.content.trim();
+  if(og && og.content) return og.content.trim();
   return document.title.split(/\s+[|·•]\s+/)[0].trim();
 }
-var enc = encodeURIComponent, link = BINDER + '#add&amp;u=' + enc(location.href);
+var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
+var enc = encodeURIComponent, title = '', text = '';
 try{
   var useClass = true, best = pickBest(true);
-  if(!best.el || best.score &lt; 60){ useClass = false; best = pickBest(false) }
-  var text = best.el ? toText(best.el, useClass) : '';
-  if(text.length &lt; 40) text = (document.body.innerText || '').trim();
-  link = BINDER + '#add&amp;t=' + enc(titleOf()) + '&amp;u=' + enc(location.href) + '&amp;x=' + enc(text.slice(0, 120000));
+  if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
+  text = best.el ? toText(best.el, useClass) : '';
+  if(text.length < 40) text = (document.body.innerText || '').trim();
+  title = titleOf();
 }catch(e){}
-completion(link);
+var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
+fetch(BINDER + 'api/collections/clip_inbox/records', {
+  method: 'POST', headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
+}).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
+  .then(function(rec){ completion(BINDER + '#add&clip=' + rec.id) })
+  .catch(function(){ completion(short + '&nx=1') });
 </script>
     <h3>Account</h3>
     <p class="acct" id="acct"></p>
@@ -584,7 +590,7 @@ $('gateForm').addEventListener('submit', async e => {
 });
 $('signOut').addEventListener('click', () => {
   try{ pb.collection('clips').unsubscribe() }catch{}
-  pb.authStore.clear(); S.items = []; store = null; assets = null; closeMore && closeMore(); render(); showGate();
+  pb.authStore.clear(); S.items = []; S.clipKey = ''; store = null; assets = null; closeMore && closeMore(); render(); showGate();
 });
 async function initStore(){
   if(!me()){ showGate(); return }
@@ -612,6 +618,8 @@ async function initStore(){
     files.forEach(r => { FILEURL[r.id] = linkOf(r) });
     S.items = list.map(toItem); S.ready = true;
     $('status').textContent = me().household ? 'Shared with your family' : 'Synced across your devices';
+    loadClipKey().catch(() => {});
+    loadClip();
     render();
   }catch(e){ $('status').textContent = 'Couldn’t load your binder. Reload to try again.'; return }
   col.subscribe('*', ev => {
@@ -1197,10 +1205,26 @@ $('pasteBtn').onclick = async () => {
     $('fBody').value = txt; afterPaste();
   }catch{ toast('Allow paste, or long-press the box and tap Paste') }
 };
+/* The shortcut's key lives on the server (clip_keys), never in these public files.
+   It's fetched (or made, the first time) at sign-in so the Copy tap can write the clipboard straight away. */
+async function loadClipKey(){
+  if(!me()) return '';
+  const col = pb.collection('clip_keys');
+  const have = await col.getList(1, 1);
+  if(have.items.length) return S.clipKey = have.items[0].key;
+  const a = new Uint8Array(18); crypto.getRandomValues(a);
+  const key = Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
+  const r = await col.create({owner: me().id, household: me().household || '', key});
+  return S.clipKey = r.key;
+}
 $('copyClip').onclick = async () => {
-  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/');
+  if(!S.clipKey){
+    try{ await loadClipKey(); toast('Ready. Tap Copy shortcut script again.') }catch{ toast('Couldn’t get your shortcut key. Check your connection and try again.') }
+    return;
+  }
+  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/').replace('__CLIP_KEY__', S.clipKey);
   try{ await navigator.clipboard.writeText(src); toast('Script copied. Paste it into Run JavaScript on Web Page.') }
-  catch{ toast('Couldn’t copy. Open binder.jermins.com/clipper.js and copy it from there.') }
+  catch{ toast('Couldn’t copy. Try again.') }
 };
 $('untrimBtn').onclick = () => { if(S.preTrim!=null){ $('fBody').value = S.preTrim; S.preTrim = null; $('untrimBtn').hidden = true; $('tidyNote').textContent = 'Put the full text back.' } };
 $('tidyBtn').onclick = () => { const r = tidy($('fBody').value); $('fBody').value = r.out; r.removed += trimToMain(); $('tidyNote').textContent = r.removed ? 'Removed '+r.removed+' clutter line'+(r.removed>1?'s':'')+'.' : 'Already tidy.' };
@@ -1288,15 +1312,27 @@ document.addEventListener('touchend', e => {
 }, {passive:true});
 
 /* deep links: #add, #lyrics, #stories, #chords */
+async function loadClip(){
+  const id = S.pendingClip;
+  if(!id || !me()) return;   // runs again after sign-in
+  S.pendingClip = null;
+  try{
+    const r = await pb.collection('clip_inbox').getOne(id);
+    prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: r.x || ''}));
+    pb.collection('clip_inbox').delete(id).catch(() => {});
+  }catch{ $('tidyNote').textContent = 'Couldn’t load that clipping. Share the page again, or paste the text.' }
+}
 function fromHash(){
   const raw = (location.hash||'').slice(1), amp = raw.indexOf('&');
   const h = amp < 0 ? raw : raw.slice(0, amp);
   if(TYPES[h]){ S.type = h; render() }
   if(h==='add'){
     const q = new URLSearchParams(amp < 0 ? '' : raw.slice(amp+1));
-    const clip = q.has('x') || q.has('u');
+    const clip = q.has('x') || q.has('u') || q.has('clip');
     openEditor(null, clip);
-    if(clip){ prefillFromClip(q); try{ history.replaceState(null,'',location.pathname+location.search+'#add') }catch{} }
+    if(q.has('clip')){ S.pendingClip = q.get('clip'); $('tidyNote').textContent = 'Loading the page you shared…'; loadClip() }
+    else if(clip){ prefillFromClip(q); if(q.has('nx')) $('tidyNote').textContent = 'That site wouldn’t hand over its text. Copy it on the page, then tap Paste.' }
+    if(clip){ try{ history.replaceState(null,'',location.pathname+location.search+'#add') }catch{} }
   }
 }
 window.addEventListener('hashchange', fromHash);
