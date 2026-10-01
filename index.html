@@ -441,6 +441,10 @@ function titleOf(){
 }
 var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
 var enc = encodeURIComponent, title = '', text = '';
+// Always hand Shortcuts a link, even if this page breaks the script or the server is slow
+var sent = false;
+function finish(url){ if(!sent){ sent = true; completion(url) } }
+setTimeout(function(){ finish(BINDER + '#add&t=' + enc((title || document.title || '').slice(0, 200)) + '&u=' + enc(location.href) + '&nx=1') }, 6000);
 try{
   var useClass = true, best = pickBest(true);
   if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
@@ -449,12 +453,14 @@ try{
   title = titleOf();
 }catch(e){}
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
-fetch(BINDER + 'api/collections/clip_inbox/records', {
-  method: 'POST', headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
-}).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
-  .then(function(rec){ completion(BINDER + '#add&clip=' + rec.id) })
-  .catch(function(){ completion(short + '&nx=1') });
+try{
+  fetch(BINDER + 'api/collections/clip_inbox/records', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
+  }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
+    .then(function(rec){ finish(BINDER + '#add&clip=' + rec.id) })
+    .catch(function(){ finish(short + '&nx=1') });
+}catch(e){ finish(short + '&nx=1') }
 </script>
     <h3>Account</h3>
     <p class="acct" id="acct"></p>
