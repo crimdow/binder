@@ -226,6 +226,46 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .gate .err{color:var(--ash);font-size:15px;min-height:1.3em;margin:0;text-align:center}
 .signout{width:100%;border:0;border-radius:12px;background:var(--chip);color:var(--ash);font:inherit;font-size:16px;font-weight:700;padding:12px;cursor:pointer}
 .acct{color:var(--muted);font-size:14px;margin:0 4px 8px}
+
+/* ---- phones: no accidental zoom (same as Home Board) ---- */
+html,body{touch-action:manipulation}
+@media (pointer:coarse){ .field textarea{font-size:16px} }   /* iOS zooms into any box under 16px */
+
+/* ---- desktop: binder tabs down the left edge, wider reading column ---- */
+@media (min-width:900px) and (pointer:fine){
+  .wrap{max-width:1080px;padding-inline:32px;padding-block:8px 120px;margin-left:220px;margin-right:auto}
+  .top{margin-inline:-32px;padding-inline:32px}
+  .dtags{margin-inline:-32px;padding-inline:32px}
+  .dlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));column-gap:28px}
+  .item{min-height:68px}
+  .item:hover .name{color:var(--sec)}
+  .bottom{top:0;right:auto;width:220px;border-top:0;border-right:.5px solid var(--hair);padding:calc(24px + env(safe-area-inset-top,0px)) 0 24px 14px;display:flex;gap:10px}
+  .rings{flex-direction:column;justify-content:flex-start;gap:52px;padding:22px 0 0}
+  .dividers{grid-template-columns:1fr;gap:8px;margin:0;max-width:none;flex:1;align-content:start}
+  .div{flex-direction:row;justify-content:flex-start;gap:10px;padding:14px 14px;border-radius:14px 0 0 14px;text-align:left}
+  .div::before{left:auto;right:0;top:0;bottom:0;width:4px;height:auto}
+  .div b{font-size:14px}
+  .div i{margin-left:auto}
+  .div[aria-selected="true"]{transform:translateX(6px);border-radius:14px 0 0 14px}
+  .div[aria-selected="true"]::before{width:5px;height:auto;border-radius:0}
+  .fab{right:32px;bottom:32px}
+  .undo{left:auto;right:32px;bottom:104px;max-width:420px}
+  .toast{bottom:104px}
+  .sheet{top:50%;bottom:auto;max-width:600px;max-height:86%;transform:translate(-50%,-50%);border-radius:22px;padding:8px 24px 24px}
+  .sheet .grab{display:none}
+  .field textarea{min-height:340px}
+  .dbody{max-width:780px;padding-inline:32px}
+  .reader h2{font-size:34px}
+  .rbody.lyrics{font-size:calc(21px * var(--fs))}
+  .rbody.stories{font-size:calc(19px * var(--fs));max-width:68ch}
+  .rbody.chords{font-size:calc(16px * var(--fs))}
+  .pagewrap,.chordwrap{margin-inline:0;padding-inline:0}
+  .rtools .in{max-width:780px}
+}
+@media (min-width:900px) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .sheet{animation:pop .22s ease-out}
+  @keyframes pop{from{transform:translate(-50%,-46%);opacity:.5}to{transform:translate(-50%,-50%);opacity:1}}
+}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -439,59 +479,22 @@ function titleOf(){
   if(og && og.content) return og.content.trim();
   return document.title.split(/\s+[|·•]\s+/)[0].trim();
 }
-// Site readers: exact lyrics for sites the general reader gets wrong. Each returns {text, title} or null.
-var GENIUS_BOX = '[data-lyrics-container="true"],[class^="Lyrics__Container"],[class*=" Lyrics__Container"]';
-function geniusText(){
-  var cs = document.querySelectorAll(GENIUS_BOX), parts = [];
-  for(var i = 0; i < cs.length; i++){
-    var c = cs[i], out = '';
-    (function walk(x){
-      if(x.nodeType === 3){ out += x.nodeValue; return }
-      if(x.nodeType !== 1) return;
-      if(x.matches('[data-exclude-from-selection],script,style,noscript,svg,button,img')) return;   // "Contributors" header, avatars
-      if(x.tagName === 'BR'){ out += '\n'; return }
-      for(var k = x.firstChild; k; k = k.nextSibling) walk(k);
-      if(/^(DIV|P)$/.test(x.tagName) && x !== c) out += '\n';
-    })(c);
-    out = out.replace(/[ \t]+\n/g, '\n').replace(/^\s+|\s+$/g, ''); if(out) parts.push(out);
-  }
-  return parts.join('\n').replace(/\n{3,}/g, '\n\n').trim();
-}
-function siteReader(){
-  var h = location.hostname;
-  if(/(^|\.)genius\.com$/.test(h) && document.querySelector(GENIUS_BOX)){
-    var og = document.querySelector('meta[property="og:title"]');   // "Artist – Song"
-    return { text: geniusText(), title: og && og.content ? og.content.trim() : '' };
-  }
-  return null;
-}
-var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
+var KEY = 'Bl6tjT9zmJyh6ESispnMrQdv';   // must match the Create rule on the clip_inbox collection
 var enc = encodeURIComponent, title = '', text = '';
-// Always hand Shortcuts a link, even if this page breaks the script or the server is slow
-var sent = false;
-function finish(url){ if(!sent){ sent = true; completion(url) } }
-setTimeout(function(){ finish(BINDER + '#add&t=' + enc((title || document.title || '').slice(0, 200)) + '&u=' + enc(location.href) + '&nx=1') }, 6000);
 try{
-  var site = siteReader();
-  if(site && site.text.length >= 20){ text = site.text; title = site.title || titleOf() }
-  else {
-    var useClass = true, best = pickBest(true);
-    if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
-    text = best.el ? toText(best.el, useClass) : '';
-    if(text.length < 40) text = (document.body.innerText || '').trim();
-    title = titleOf();
-  }
+  var useClass = true, best = pickBest(true);
+  if(!best.el || best.score < 60){ useClass = false; best = pickBest(false) }
+  text = best.el ? toText(best.el, useClass) : '';
+  if(text.length < 40) text = (document.body.innerText || '').trim();
+  title = titleOf();
 }catch(e){}
-title = (title || '').replace(/\s+/g, ' ').trim();   // Genius and others use non-breaking spaces in names
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
-try{
-  fetch(BINDER + 'api/collections/clip_inbox/records', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
-  }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
-    .then(function(rec){ finish(BINDER + '#add&clip=' + rec.id) })
-    .catch(function(){ finish(short + '&nx=1') });
-}catch(e){ finish(short + '&nx=1') }
+fetch(BINDER + 'api/collections/clip_inbox/records', {
+  method: 'POST', headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: KEY, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
+}).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
+  .then(function(rec){ completion(BINDER + '#add&clip=' + rec.id) })
+  .catch(function(){ completion(short + '&nx=1') });
 </script>
     <h3>Account</h3>
     <p class="acct" id="acct"></p>
@@ -627,7 +630,7 @@ $('gateForm').addEventListener('submit', async e => {
 });
 $('signOut').addEventListener('click', () => {
   try{ pb.collection('clips').unsubscribe() }catch{}
-  pb.authStore.clear(); S.items = []; S.clipKey = ''; store = null; assets = null; closeMore && closeMore(); render(); showGate();
+  pb.authStore.clear(); S.items = []; store = null; assets = null; closeMore && closeMore(); render(); showGate();
 });
 async function initStore(){
   if(!me()){ showGate(); return }
@@ -655,7 +658,6 @@ async function initStore(){
     files.forEach(r => { FILEURL[r.id] = linkOf(r) });
     S.items = list.map(toItem); S.ready = true;
     $('status').textContent = me().household ? 'Shared with your family' : 'Synced across your devices';
-    loadClipKey().catch(() => {});
     loadClip();
     render();
   }catch(e){ $('status').textContent = 'Couldn’t load your binder. Reload to try again.'; return }
@@ -705,7 +707,9 @@ function render(){
     const main = document.createElement('span'); main.className='main';
     const n = document.createElement('span'); n.className='name'; n.textContent = it.title || 'Untitled';
     if(it.example){ const e=document.createElement('span'); e.className='ex'; e.textContent='Example'; n.appendChild(e) }
-    main.append(n); b.appendChild(main);   // list shows the title only: no artist, file note or text preview
+    const p = document.createElement('span'); p.className='prev';
+    p.textContent = [it.by, filesLabel(it.files)].filter(Boolean).join(' · ') || firstLine(it.body) || TYPES[it.type].one;
+    main.append(n,p); b.appendChild(main);
     if(it.genre){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.genre; b.appendChild(m) }
     b.onclick = () => openReader(it);
     li.appendChild(b); list.appendChild(li);
@@ -1240,26 +1244,10 @@ $('pasteBtn').onclick = async () => {
     $('fBody').value = txt; afterPaste();
   }catch{ toast('Allow paste, or long-press the box and tap Paste') }
 };
-/* The shortcut's key lives on the server (clip_keys), never in these public files.
-   It's fetched (or made, the first time) at sign-in so the Copy tap can write the clipboard straight away. */
-async function loadClipKey(){
-  if(!me()) return '';
-  const col = pb.collection('clip_keys');
-  const have = await col.getList(1, 1);
-  if(have.items.length) return S.clipKey = have.items[0].key;
-  const a = new Uint8Array(18); crypto.getRandomValues(a);
-  const key = Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
-  const r = await col.create({owner: me().id, household: me().household || '', key});
-  return S.clipKey = r.key;
-}
 $('copyClip').onclick = async () => {
-  if(!S.clipKey){
-    try{ await loadClipKey(); toast('Ready. Tap Copy shortcut script again.') }catch{ toast('Couldn’t get your shortcut key. Check your connection and try again.') }
-    return;
-  }
-  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/').replace('__CLIP_KEY__', S.clipKey);
+  const src = $('clipSrc').textContent.replace('https://binder.jermins.com/', location.origin + '/');
   try{ await navigator.clipboard.writeText(src); toast('Script copied. Paste it into Run JavaScript on Web Page.') }
-  catch{ toast('Couldn’t copy. Try again.') }
+  catch{ toast('Couldn’t copy. Open binder.jermins.com/clipper.js and copy it from there.') }
 };
 $('untrimBtn').onclick = () => { if(S.preTrim!=null){ $('fBody').value = S.preTrim; S.preTrim = null; $('untrimBtn').hidden = true; $('tidyNote').textContent = 'Put the full text back.' } };
 $('tidyBtn').onclick = () => { const r = tidy($('fBody').value); $('fBody').value = r.out; r.removed += trimToMain(); $('tidyNote').textContent = r.removed ? 'Removed '+r.removed+' clutter line'+(r.removed>1?'s':'')+'.' : 'Already tidy.' };
@@ -1295,12 +1283,7 @@ $('attachBtn').onclick = () => { pickFor = 'editor'; $('filePick').click() };
 $('filePick').onchange = e => {
   const list = [...e.target.files]; e.target.value = '';
   if(!list.length || !assets) return;
-  if(pickFor==='editor'){
-    // Several files picked for a brand-new, empty clipping: offer one clipping per file instead of one with many pages
-    const blank = !S.editing && !S.edFiles.length && !$('fBody').value.trim() && !$('fTitle').value.trim();
-    if(list.length > 1 && blank){ const t = S.edType || S.type; closeEditor(); openUpSheet(list); UP.type = t; paintUpSheet() }
-    else attachFiles(list);
-  }
+  if(pickFor==='editor') attachFiles(list);
   else if(list.length===1){ openEditor(null); attachFiles(list) }
   else openUpSheet(list);
 };
@@ -1376,6 +1359,24 @@ function fromHash(){
   }
 }
 window.addEventListener('hashchange', fromHash);
+
+/* phones: block pinch and double-tap zoom like Home Board, except on sheet music pages; desktop zoom (Ctrl/⌘ +/-) is untouched */
+if(matchMedia('(pointer:coarse)').matches){
+  const allow = e => e.target && e.target.closest && e.target.closest('.pagewrap');
+  ['gesturestart','gesturechange'].forEach(t => document.addEventListener(t, e => { if(!allow(e)) e.preventDefault() }, {passive:false}));
+  document.addEventListener('dblclick', e => { if(!allow(e)) e.preventDefault() }, {passive:false});
+}
+/* desktop shortcuts: / search, N new, U upload, 1-3 sections */
+document.addEventListener('keydown', e => {
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+  if(typing || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || S.open || !$('gate').hidden) return;
+  const k = e.key.toLowerCase(), order = Object.keys(TYPES);
+  if(k==='/'){ e.preventDefault(); $('q').focus() }
+  else if(k==='n'){ e.preventDefault(); openEditor(null) }
+  else if(k==='u' && !$('upBtn').hidden){ e.preventDefault(); $('upBtn').click() }
+  else if(k>='1' && k<='3'){ S.type = order[+k-1]; ls.set('type', S.type); render() }
+});
 
 applyMode(); paintSkins();
 render(); fromHash(); initStore().then(initAssets);
