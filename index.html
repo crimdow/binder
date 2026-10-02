@@ -246,6 +246,9 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .gate button{border:0;border-radius:12px;background:var(--ink);color:var(--bg);font:inherit;font-size:17px;font-weight:700;padding:14px;cursor:pointer}
 .gate button:disabled{opacity:.5}
 .gate .err{color:var(--ash);font-size:15px;min-height:1.3em;margin:0;text-align:center}
+.bmk{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 14px;margin-left:4px;border-radius:16px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14px;text-decoration:none;cursor:grab;vertical-align:middle}
+.bmk::before{content:"+";font-size:17px;font-weight:800;line-height:1}
+.bmk-note{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .signout{width:100%;border:0;border-radius:12px;background:var(--chip);color:var(--ash);font:inherit;font-size:16px;font-weight:700;padding:12px;cursor:pointer}
 .acct{color:var(--muted);font-size:14px;margin:0 4px 8px}
 </style>
@@ -410,6 +413,16 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
       </ol>
       <button type="button" class="signout" id="copyClip" style="color:var(--ben);margin-top:8px">Copy shortcut script</button>
     </div>
+    <h3>Bookmark (laptop)</h3>
+    <div class="help" style="margin-top:0">
+      <ol>
+        <li>Show your bookmarks bar (Chrome or Edge: Ctrl/⌘+Shift+B · Safari: View → Show Favorites Bar).</li>
+        <li>Drag this button up onto the bar: <a class="bmk" id="bmkLink" href="#" draggable="true">Add to Binder</a></li>
+        <li>On any page with lyrics, a story, chords or a recipe, click <b>Add to Binder</b>. The binder opens in a new tab with it filled in. Check it and tap Save.</li>
+      </ol>
+      <p class="bmk-note">Can’t drag? Copy the code, make a new bookmark, and paste it in as the address.</p>
+      <button type="button" class="signout" id="copyBmk" style="color:var(--ben);margin-top:8px">Copy bookmark code</button>
+    </div>
     <script type="text/plain" id="clipSrc">// Pocket Binder clipper: runs on the page you share from Safari and sends its main text to your binder.
 var BINDER = 'https://binder.jermins.com/';
 var SKIP = 'script,style,noscript,template,iframe,svg,canvas,button,select,input,textarea,form,nav,header,footer,aside,ins,[hidden],[aria-hidden="true"],[role="navigation"],[role="banner"],[role="contentinfo"],[role="complementary"]';
@@ -548,10 +561,12 @@ try{
 }catch(e){}
 title = (title || '').replace(/\s+/g, ' ').trim();   // Genius and others use non-breaking spaces in names
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
-try{
+var clip = { k: kind, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) };
+if(typeof BOOKMARK === 'function'){ sent = true; BOOKMARK(clip) }   // laptop bookmark: the binder tab is already opening
+else try{
   fetch(BINDER + 'api/collections/clip_inbox/records', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ key: KEY, k: kind, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) })
+    body: JSON.stringify({ key: KEY, k: clip.k, t: clip.t, u: clip.u, x: clip.x })
   }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
     .then(function(rec){ finish(BINDER + '#add&clip=' + rec.id) })
     .catch(function(){ finish(short + '&nx=1') });
@@ -1459,12 +1474,34 @@ async function loadClipKey(){
   if(!me()) return '';
   const col = pb.collection('clip_keys');
   const have = await col.getList(1, 1);
-  if(have.items.length) return S.clipKey = have.items[0].key;
+  if(have.items.length){ S.clipKey = have.items[0].key; paintBookmark(); return S.clipKey }
   const a = new Uint8Array(18); crypto.getRandomValues(a);
   const key = Array.from(a, b => b.toString(16).padStart(2, '0')).join('');
   const r = await col.create({owner: me().id, household: me().household || '', key});
-  return S.clipKey = r.key;
+  S.clipKey = r.key; paintBookmark();
+  return S.clipKey;
 }
+function bookmarkCode(){
+  if(!S.clipKey) return '';
+  const B = location.origin + '/';
+  const body = $('clipSrc').textContent.replace('https://binder.jermins.com/', B).replace('__CLIP_KEY__', S.clipKey);
+  const wrap = "(function(){var B=" + JSON.stringify(B) + ";"
+    + "var BOOKMARK=function(c){var f=document.createElement('form');f.method='POST';f.action=B+'api/binder/clip-form';f.target='_blank';f.acceptCharset='utf-8';f.style.display='none';"
+    + "var add=function(n,v){var i=document.createElement('textarea');i.name=n;i.value=v;f.appendChild(i)};add('key',KEY);add('k',c.k);add('t',c.t);add('u',c.u);add('x',c.x);"
+    + "(document.body||document.documentElement).appendChild(f);f.submit();setTimeout(function(){f.remove()},1000)},completion=function(){};\n" + body + "\n})();";
+  return 'javascript:' + encodeURIComponent(wrap);
+}
+function paintBookmark(){ const a = $('bmkLink'); if(a) a.href = bookmarkCode() || '#' }
+$('bmkLink').addEventListener('click', e => { e.preventDefault(); toast(S.clipKey ? 'Drag it to your bookmarks bar, then click it on another site' : 'One moment, getting your key…'); if(!S.clipKey) loadClipKey().catch(() => {}) });
+$('bmkLink').addEventListener('dragstart', () => paintBookmark());
+$('copyBmk').onclick = async () => {
+  if(!S.clipKey){
+    try{ await loadClipKey(); toast('Ready. Tap Copy bookmark code again.') }catch{ toast('Couldn’t get your key. Check your connection and try again.') }
+    return;
+  }
+  try{ await navigator.clipboard.writeText(bookmarkCode()); toast('Bookmark code copied. Paste it as a new bookmark’s address.') }
+  catch{ toast('Couldn’t copy. Try again.') }
+};
 $('copyClip').onclick = async () => {
   if(!S.clipKey){
     try{ await loadClipKey(); toast('Ready. Tap Copy shortcut script again.') }catch{ toast('Couldn’t get your shortcut key. Check your connection and try again.') }
