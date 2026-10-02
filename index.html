@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Pocket Binder</title>
 <meta name="theme-color" content="#e4e5e8">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,6 +59,8 @@ body[data-type="stories"]{--sec:var(--sto)}
 body[data-type="chords"]{--sec:var(--chd)}
 :root{--rec:#3f9a66} :root[data-pb="dark"]{--rec:#5cb683}
 body[data-type="recipes"]{--sec:var(--rec)}
+:root{--nts:#3a8fa3} :root[data-pb="dark"]{--nts:#5fb0c2}
+body[data-type="notes"]{--sec:var(--nts)}
 
 *,*::before,*::after{box-sizing:border-box}
 html{height:100%;background:var(--bg)}
@@ -105,13 +107,42 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .fab:active{transform:scale(.92)}
 .fab svg{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:2.6;stroke-linecap:round}
 
+/* notes: light formatting like Home Board's */
+.rbody.notes{font-size:calc(17px * var(--fs));line-height:1.5}
+.rbody.notes p{margin:0 0 .35em}
+.rbody.notes h3{margin:.9em 0 .3em;font-size:1.05em;font-weight:800}
+.rbody.notes ul,.rbody.notes ol{margin:.2em 0 .5em;padding-left:1.3em}
+.rbody.notes .gap{height:.6em}
+.rbody.notes a{color:var(--ben)}
+.rbody.notes .tick{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.rbody.notes .tick i{flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;color:transparent}
+.rbody.notes .tick i svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.rbody.notes .tick.on i{background:var(--sec);border-color:var(--sec);color:#fff}
+.rbody.notes .tick.on span{color:var(--muted);text-decoration:line-through}
+/* tab bar editor in the menu */
+.sh-sub{display:flex;align-items:center;justify-content:space-between;margin:18px 4px 6px}
+.sh-sub h3{margin:0!important}
+.sh-sub .linkbtn{font-size:15px;padding:0}
+.tgroup{background:var(--bg);border-radius:14px;overflow:hidden}
+.trow{display:flex;align-items:center;gap:12px;min-height:50px;padding:0 10px 0 12px;width:100%;border:0;background:none;color:var(--ink);font:inherit;text-align:left}
+.trow + .trow{border-top:.5px solid var(--hair)}
+.trow .ico{--c:var(--lyr);width:26px;height:26px;display:grid;place-items:center;color:var(--c);flex:none}
+.trow .ico svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.trow .nm{flex:1;font-size:17px;font-weight:600}
+.trow .tg{font-size:12px;font-weight:700;color:var(--muted)}
+.trow.off .nm,.trow.off .ico{opacity:.45}
+.trow .ctl{display:flex;gap:4px}
+.trow .ctl button{width:34px;height:34px;border-radius:17px;border:0;background:var(--chip);color:var(--ink);display:grid;place-items:center;padding:0}
+.trow .ctl button:disabled{opacity:.3}
+.trow .ctl svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.trow .ctl button[aria-pressed]{background:var(--chip);color:var(--ink)}
+.trow .ctl .eye.off{color:var(--muted)}
+
 /* bottom bar = binder dividers */
 .bottom{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:.5px solid var(--hair);padding:0 12px calc(8px + env(safe-area-inset-bottom,0px))}
 .dividers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:500px;margin:0 auto;align-items:start}
 .div{--c:var(--lyr);position:relative;border:0;background:var(--chip);color:var(--muted);border-radius:0 0 14px 14px;padding:12px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .22s cubic-bezier(.3,1.4,.5,1),background-color .25s,color .25s}
-.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)} .div[data-t="recipes"]{--c:var(--rec)}
-.dividers.four{grid-template-columns:repeat(4,1fr)}
-.dividers.four .amptabs{display:none}
+.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)} .div[data-t="recipes"]{--c:var(--rec)} .div[data-t="notes"]{--c:var(--nts)}
 .div::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);opacity:.55;transition:opacity .2s}
 .div svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .div b{font-size:12px;font-weight:800;letter-spacing:.2px}
@@ -146,7 +177,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .field{display:block;margin-top:14px}
 .field>span{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px}
 .field input,.field textarea{width:100%;border:0;border-radius:10px;background:var(--field);font-size:16px;padding:10px 12px;-webkit-appearance:none;appearance:none}
-#typePick.four{grid-template-columns:repeat(4,1fr)}
+
 #recBox .field textarea{min-height:140px;white-space:pre-wrap;font-family:var(--f-ui);font-size:15px}
 #recBox #fNote{min-height:70px}
 .recacts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
@@ -251,6 +282,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .bmk-note{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .signout{width:100%;border:0;border-radius:12px;background:var(--chip);color:var(--ash);font:inherit;font-size:16px;font-weight:700;padding:12px;cursor:pointer}
 .acct{color:var(--muted);font-size:14px;margin:0 4px 8px}
+html,body{touch-action:manipulation}   /* no double-tap zoom */
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -303,12 +335,16 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
       <b>Stories</b><i id="n-stories">0</i>
     </button>
     <button class="div" role="tab" data-t="chords" id="tab-chords">
-      <svg viewBox="0 0 24 24"><path d="M5 3v18M10 3v18M15 3v18M20 3v18M5 7h15M5 12h15M5 17h15"/><circle cx="10" cy="9.5" r="1.4" fill="currentColor"/><circle cx="15" cy="14.5" r="1.4" fill="currentColor"/></svg>
-      <b>Chords<span class="amptabs"> &amp; Tabs</span></b><i id="n-chords">0</i>
+      <svg viewBox="0 0 24 24"><circle cx="8.5" cy="15.5" r="6.2"/><circle cx="8.5" cy="15.5" r="2.4"/><path d="M12.9 11.1 18.4 5.6"/><path d="M17.4 4.6 19.6 2.4l2 2-2.2 2.2z"/><path d="M18.2 2.2l-.9-.9M21.8 5.8l.9.9"/></svg>
+      <b>Tabs</b><i id="n-chords">0</i>
     </button>
     <button class="div" role="tab" data-t="recipes" id="tab-recipes" hidden>
       <svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2 1.5-3 4-3 7v3h3"/></svg>
       <b>Recipes</b><i id="n-recipes">0</i>
+    </button>
+    <button class="div" role="tab" data-t="notes" id="tab-notes" hidden>
+      <svg viewBox="0 0 24 24"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8h5M9 12.5h7M9 16h5"/></svg>
+      <b>Notes</b><i id="n-notes">0</i>
     </button>
   </div>
 </nav>
@@ -348,8 +384,9 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
     <div class="seg" id="typePick">
       <button type="button" data-t="lyrics" id="tp-lyrics">Lyrics</button>
       <button type="button" data-t="stories" id="tp-stories">Story</button>
-      <button type="button" data-t="chords" id="tp-chords">Chords/Tabs</button>
+      <button type="button" data-t="chords" id="tp-chords">Tabs</button>
       <button type="button" data-t="recipes" id="tp-recipes" hidden>Recipe</button>
+      <button type="button" data-t="notes" id="tp-notes" hidden>Note</button>
     </div>
     <div id="attachBox" hidden>
       <h3 id="attachHead">Sheet music &amp; photos</h3>
@@ -374,7 +411,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
     <label class="field"><span>Title</span><input id="fTitle" class="ftitle" required></label>
     <div class="two">
       <label class="field" id="byField"><span id="fByLbl">Artist</span><input id="fBy"></label>
-      <label class="field"><span>Genre</span><input id="fGenre" list="genreList" placeholder="Optional"></label>
+      <label class="field"><span id="fGenreLbl">Genre</span><input id="fGenre" list="genreList" placeholder="Optional"></label>
     </div>
     <datalist id="genreList"></datalist>
     <label class="field"><span>Source link</span><input id="fSrc" type="url" inputmode="url" placeholder="Optional"></label>
@@ -387,6 +424,8 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
   <div class="sheet" role="dialog" aria-label="More">
     <div class="grab"></div>
     <div class="sh-head"><h2>More</h2><button class="linkbtn" id="moreDone">Done</button></div>
+    <div class="sh-sub"><h3>Tabs</h3><button type="button" class="linkbtn" id="tabsEdit">Edit</button></div>
+    <div class="tgroup" id="tabList"></div>
     <h3>Appearance</h3>
     <div class="seg" id="modeSeg">
       <button type="button" data-m="auto" id="m-auto">Auto</button>
@@ -418,7 +457,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
       <ol>
         <li>Show your bookmarks bar (Chrome or Edge: Ctrl/⌘+Shift+B · Safari: View → Show Favorites Bar).</li>
         <li>Drag this button up onto the bar: <a class="bmk" id="bmkLink" href="#" draggable="true">Add to Binder</a></li>
-        <li>On any page with lyrics, a story, chords or a recipe, click <b>Add to Binder</b>. The binder opens in a new tab with it filled in. Check it and tap Save.</li>
+        <li>On any page with lyrics, a story, a tab or a recipe, click <b>Add to Binder</b>. The binder opens in a new tab with it filled in. Check it and tap Save.</li>
       </ol>
       <p class="bmk-note">Can’t drag? Copy the code, make a new bookmark, and paste it in as the address.</p>
       <button type="button" class="signout" id="copyBmk" style="color:var(--ben);margin-top:8px">Copy bookmark code</button>
@@ -602,7 +641,7 @@ else try{
     <div class="seg">
       <button type="button" data-t="lyrics" id="ut-lyrics">Lyrics</button>
       <button type="button" data-t="stories" id="ut-stories">Story</button>
-      <button type="button" data-t="chords" id="ut-chords">Chords/Tabs</button>
+      <button type="button" data-t="chords" id="ut-chords">Tabs</button>
     </div>
     <h3>Add as</h3>
     <div class="seg" style="grid-template-columns:1fr 1fr">
@@ -631,10 +670,12 @@ else try{
 const TYPES = {
   lyrics: {label:'Lyrics', one:'lyric sheet', who:'Artist'},
   stories:{label:'Stories', one:'story', who:'Author'},
-  chords: {label:'Chords & Tabs', one:'chord chart', who:'Artist'},
-  recipes:{label:'Recipes', one:'recipe', who:'From'}   // Home Board's own recipe list, shared with its Recipes page
+  chords: {label:'Tabs', one:'tab', who:'Artist'},
+  recipes:{label:'Recipes', one:'recipe', who:'From'},  // Home Board's own recipe list
+  notes:  {label:'Notes', one:'note', who:''}            // Home Board's own notes list
 };
 const CLIP_TYPES = ['lyrics','stories','chords'];
+const HBT = ['recipes','notes'];   // these live in Home Board's tables, for logins in a household
 const SKINS = [
   {k:'', n:'Classic', dots:['#4f7bd4','#8a6bb8','#c98a3e']},
   {k:'barbie', n:'Barbie', dots:['#e0218a','#5b7fd6','#f0d5e1']},
@@ -719,7 +760,8 @@ $('gateForm').addEventListener('submit', async e => {
 $('signOut').addEventListener('click', () => {
   try{ pb.collection('clips').unsubscribe() }catch{}
   try{ pb.collection('recipes').unsubscribe() }catch{}
-  pb.authStore.clear(); S.items = []; S.clipKey = ''; store = null; assets = null; closeMore && closeMore(); render(); showGate();
+  try{ pb.collection('notes').unsubscribe() }catch{}
+  pb.authStore.clear(); S.items = []; S.clipKey = ''; store = null; assets = null; closeMore && closeMore(); paintTabs(); render(); showGate();
 });
 /* ---------- recipes: Home Board's "recipes" table ---------- */
 const WEEK = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
@@ -734,10 +776,8 @@ function recToItem(r){
 }
 async function loadRecipes(){
   const on = !!(me() && me().household);
-  $('tab-recipes').hidden = $('tp-recipes').hidden = !on;
-  document.querySelector('.dividers').classList.toggle('four', on);
-  $('typePick').classList.toggle('four', on);
-  if(!on){ if(S.type === 'recipes'){ S.type = 'lyrics'; render() } return }
+  paintTabs();
+  if(!on) return;
   try{
     const list = await pb.collection('recipes').getFullList();
     S.items = S.items.filter(x => x.type !== 'recipes').concat(list.map(recToItem)); render();
@@ -762,6 +802,124 @@ async function saveRecipe(it){
   keepLocal(recToItem(rec)); return rec.id;
 }
 async function removeRecipe(id){ await pb.collection('recipes').delete(id); S.items = S.items.filter(x => x.id !== id); render() }
+
+/* ---------- notes: Home Board's "notes" table ---------- */
+function noteToItem(r){
+  const photos = Array.isArray(r.photos) ? r.photos.filter(f => f && f.id) : [];
+  photos.forEach(f => { if(f.path) FILEURL[f.id] = f.path });
+  const tags = Array.isArray(r.tags) ? r.tags : [];
+  return { id:r.id, type:'notes', title:r.name || '', by:'', genre:tags[0] || '', tags, body:r.body || '', src:'', files:photos, pinned:!!r.pinned,
+    added: Date.parse(r.created_at || '') || Date.parse((r.created || '').replace(' ', 'T')) || 0,
+    updated: Date.parse(r.updated_at || '') || Date.parse(r.created_at || '') || 0 };
+}
+async function loadNotes(){
+  if(!(me() && me().household)) return;
+  try{
+    const list = await pb.collection('notes').getFullList();
+    S.items = S.items.filter(x => x.type !== 'notes').concat(list.map(noteToItem)); render();
+  }catch{ toast('Couldn’t load notes.') }
+  pb.collection('notes').subscribe('*', ev => {
+    if(ev.action === 'delete'){ S.items = S.items.filter(x => x.id !== ev.record.id); render() }
+    else keepLocal(noteToItem(ev.record));
+  }).catch(() => {});
+}
+async function saveNote(it){
+  const col = pb.collection('notes'), now = new Date().toISOString();
+  const tags = [it.genre, ...((it.tags || []).slice(1))].map(t => String(t || '').trim()).filter(Boolean).filter((t, i, a) => a.indexOf(t) === i);
+  const data = { name: it.title, body: String(it.body || '').replace(/\s+$/, ''), tags,
+    photos: (it.files || []).map(({id, type, name, size, path}) => ({id, type, name, size, path: path || FILEURL[id] || ''})), updated_at: now };
+  let rec;
+  if(it.id){
+    try{ rec = await col.update(it.id, data) }
+    catch(e){ if(e?.status !== 404) throw e; rec = await col.create({...(/^[a-z0-9]{15}$/.test(it.id) ? {id: it.id} : {}), ...data, pinned: !!it.pinned, created_at: now}) }   // Undo puts a deleted one back
+  } else rec = await col.create({...data, pinned: false, created_at: now});
+  keepLocal(noteToItem(rec)); return rec.id;
+}
+async function removeNote(id){ await pb.collection('notes').delete(id); S.items = S.items.filter(x => x.id !== id); render() }
+// Light formatting, same as Home Board: # heading, - bullet, 1. numbered, [ ] / [x] checkbox, links
+const TICK = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+function linkify(h){ return h.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>') }
+function richText(text){
+  let html = '', list = null;
+  const close = () => { if(list){ html += '</' + list + '>'; list = null } };
+  String(text || '').split('\n').forEach((raw, n) => {
+    const l = raw.replace(/\s+$/, ''); let m;
+    if((m = l.match(/^\s*(?:[-*•]\s*)?\[( |x|X)\]\s?(.*)$/))){ close(); html += '<div class="tick' + (m[1] !== ' ' ? ' on' : '') + '" data-line="' + n + '"><i>' + TICK + '</i><span>' + linkify(esc(m[2])) + '</span></div>' }
+    else if((m = l.match(/^\s*#{1,3}\s+(.*)$/))){ close(); html += '<h3>' + linkify(esc(m[1])) + '</h3>' }
+    else if((m = l.match(/^\s*[-*•]\s+(.*)$/))){ if(list !== 'ul'){ close(); html += '<ul>'; list = 'ul' } html += '<li>' + linkify(esc(m[1])) + '</li>' }
+    else if((m = l.match(/^\s*\d+[.)]\s+(.*)$/))){ if(list !== 'ol'){ close(); html += '<ol>'; list = 'ol' } html += '<li>' + linkify(esc(m[1])) + '</li>' }
+    else if(!l.trim()){ close(); html += '<div class="gap"></div>' }
+    else { close(); html += '<p>' + linkify(esc(l)) + '</p>' }
+  });
+  close(); return html;
+}
+function paintNote(it, body){
+  if(!String(it.body || '').trim()){ const p = document.createElement('p'); p.className = 'rnote'; p.textContent = 'Nothing written yet. Tap Edit to add to it.'; body.appendChild(p); return }
+  body.innerHTML = richText(it.body);
+  body.querySelectorAll('.tick').forEach(t => t.addEventListener('click', async e => {   // ticking a box saves it, as in Home Board
+    if(e.target.closest('a')) return;
+    const lines = String(it.body || '').split('\n'), i = +t.dataset.line;
+    lines[i] = lines[i].replace(/\[( |x|X)\]/, (m, c) => c === ' ' ? '[x]' : '[ ]');
+    it.body = lines.join('\n'); t.classList.toggle('on');
+    try{ await pb.collection('notes').update(it.id, {body: it.body, updated_at: new Date().toISOString()}) }
+    catch(err){ t.classList.toggle('on'); toast(err?.status === 400 || err?.status === 403 || err?.status === 404 ? 'Only Home Board editors can change notes.' : 'Couldn’t save. Check your connection.') }
+  }));
+}
+
+/* ---------- tab bar: order and which tabs show, saved per phone (like Home Board) ---------- */
+const ALLTABS = ['lyrics','stories','chords','recipes','notes'];
+function availableTab(t){ return !HBT.includes(t) || !!(me() && me().household) }
+function tabPrefs(){
+  const p = ls.get('tabs', null) || {};
+  const order = (Array.isArray(p.order) ? p.order : []).filter((t, i, a) => ALLTABS.includes(t) && a.indexOf(t) === i);
+  ALLTABS.forEach(t => { if(!order.includes(t)) order.push(t) });
+  return { order, hidden: (Array.isArray(p.hidden) ? p.hidden : []).filter(t => ALLTABS.includes(t)) };
+}
+function shownTabs(){ const p = tabPrefs(); return p.order.filter(t => availableTab(t) && !p.hidden.includes(t)) }
+let editingTabs = false;
+const TUP = '<svg viewBox="0 0 24 24"><path d="M6 14l6-6 6 6"/></svg>', TDOWN = '<svg viewBox="0 0 24 24"><path d="M6 10l6 6 6-6"/></svg>',
+      TEYE = '<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+      TNOEYE = '<svg viewBox="0 0 24 24"><path d="M4 4l16 16M10 6c.6-.1 1.3-.2 2-.2 6 0 9.5 6.2 9.5 6.2a17 17 0 0 1-3 3.6M6.4 7.6C3.9 9.4 2.5 12 2.5 12S6 18.5 12 18.5c1.6 0 3-.4 4.2-1"/></svg>';
+function paintTabs(){
+  if(!availableTab(S.type)) S.type = shownTabs()[0] || 'lyrics';
+  const bar = document.querySelector('.dividers'), shown = shownTabs();
+  ALLTABS.forEach(t => { $('tab-'+t).hidden = !shown.includes(t) });
+  shown.forEach(t => bar.appendChild($('tab-'+t)));
+  bar.style.gridTemplateColumns = 'repeat(' + Math.max(1, shown.length) + ',minmax(0,1fr))';
+  paintTabList();
+}
+function paintTabList(){
+  const box = $('tabList'); if(!box) return;
+  const p = tabPrefs(), avail = p.order.filter(availableTab), shown = shownTabs();
+  $('tabsEdit').textContent = editingTabs ? 'Done' : 'Edit';
+  box.innerHTML = avail.map((t, i) => {
+    const off = p.hidden.includes(t), ico = $('tab-'+t).querySelector('svg').outerHTML;
+    const ctl = editingTabs ? '<span class="ctl">' +
+      '<button type="button" data-act="up" aria-label="Move ' + TYPES[t].label + ' up"' + (i === 0 ? ' disabled' : '') + '>' + TUP + '</button>' +
+      '<button type="button" data-act="down" aria-label="Move ' + TYPES[t].label + ' down"' + (i === avail.length - 1 ? ' disabled' : '') + '>' + TDOWN + '</button>' +
+      '<button type="button" data-act="eye" class="eye' + (off ? ' off' : '') + '" aria-pressed="' + !off + '" aria-label="' + (off ? 'Show ' : 'Hide ') + TYPES[t].label + ' on the tab bar"' + (!off && shown.length === 1 ? ' disabled' : '') + '>' + (off ? TNOEYE : TEYE) + '</button></span>'
+      : (off ? '<span class="tg">Hidden</span>' : '');
+    return '<div class="trow' + (off ? ' off' : '') + '" data-t="' + t + '" role="button" tabindex="0"><span class="ico" style="--c:var(' + ({lyrics:'--lyr',stories:'--sto',chords:'--chd',recipes:'--rec',notes:'--nts'})[t] + ')">' + ico + '</span><span class="nm">' + TYPES[t].label + '</span>' + ctl + '</div>';
+  }).join('');
+}
+function goSection(t){ S.type = t; ls.set('type', t); render(); window.scrollTo({top:0}) }
+document.addEventListener('click', e => {
+  const r = e.target.closest('#tabList .trow'); if(!r) return;
+  const t = r.dataset.t, b = e.target.closest('button[data-act]');
+  if(b){
+    if(b.disabled) return;
+    const p = tabPrefs(), avail = p.order.filter(availableTab), i = avail.indexOf(t);
+    if(b.dataset.act === 'eye'){ if(p.hidden.includes(t)) p.hidden = p.hidden.filter(x => x !== t); else p.hidden.push(t) }
+    else {
+      const j = b.dataset.act === 'up' ? i - 1 : i + 1, other = avail[j]; if(!other) return;
+      const a1 = p.order.indexOf(t), a2 = p.order.indexOf(other); p.order[a1] = other; p.order[a2] = t;
+    }
+    ls.set('tabs', p); paintTabs(); render(); return;
+  }
+  if(editingTabs) return;
+  closeMore(); goSection(t);
+});
+document.addEventListener('click', e => { if(e.target.closest('#tabsEdit')){ editingTabs = !editingTabs; paintTabList() } });
 
 /* small picker sheet */
 const PICK = { go: null };
@@ -825,9 +983,9 @@ async function initStore(){
     },
     async remove(id){ await col.delete(id); S.items = S.items.filter(x=>x.id!==id); render() }
   };
-  const saveClip = store.save, removeClip = store.remove;   // recipes go to Home Board's table instead
-  store.save = it => it.type === 'recipes' ? saveRecipe(it) : saveClip(it);
-  store.remove = id => (S.items.find(x => x.id === id) || {}).type === 'recipes' ? removeRecipe(id) : removeClip(id);
+  const saveClip = store.save, removeClip = store.remove;   // recipes and notes go to Home Board's tables instead
+  store.save = it => it.type === 'recipes' ? saveRecipe(it) : it.type === 'notes' ? saveNote(it) : saveClip(it);
+  store.remove = id => { const t = (S.items.find(x => x.id === id) || {}).type; return t === 'recipes' ? removeRecipe(id) : t === 'notes' ? removeNote(id) : removeClip(id) };
   try{
     const [list, files] = await Promise.all([col.getFullList({sort: '-added'}), pb.collection('binder_files').getFullList({fields: 'id,collectionId,file'})]);
     files.forEach(r => { FILEURL[r.id] = linkOf(r) });
@@ -837,7 +995,7 @@ async function initStore(){
     loadClip();
     render();
   }catch(e){ $('status').textContent = 'Couldn’t load your binder. Reload to try again.'; return }
-  loadRecipes();
+  loadRecipes(); loadNotes();
   col.subscribe('*', ev => {
     if(ev.action==='delete'){ S.items = S.items.filter(x=>x.id!==ev.record.id); render() }
     else keepLocal(toItem(ev.record));
@@ -852,7 +1010,7 @@ function genresFor(type){
 }
 function render(){
   document.body.dataset.type = S.open ? S.open.type : S.type;
-  $('upBtn').hidden = !assets || S.type === 'recipes';   // bulk upload is for clippings; recipes add a photo in Edit
+  $('upBtn').hidden = !assets || HBT.includes(S.type);   // bulk upload is for clippings; recipes and notes add files in Edit
   for(const t in TYPES){
     $('tab-'+t).setAttribute('aria-selected', String(t===S.type));
     $('n-'+t).textContent = S.items.filter(x=>x.type===t).length;
@@ -871,7 +1029,7 @@ function render(){
   const q = S.q.trim().toLowerCase();
   let rows = S.items.filter(x => x.type===S.type
     && (g==='All' || (x.genre||'').toLowerCase()===g.toLowerCase())
-    && (!q || ((x.title||'')+' '+(x.by||'')+' '+(x.genre||'')).toLowerCase().includes(q)));
+    && (!q || ((x.title||'')+' '+(x.by||'')+' '+(x.genre||'')+(x.type==='notes' ? ' '+(x.tags||[]).join(' ')+' '+(x.body||'') : '')).toLowerCase().includes(q)));
   const nm = s => (s||'').toLowerCase();
   if(S.sort==='az') rows.sort((a,b)=>nm(a.title).localeCompare(nm(b.title)));
   else if(S.sort==='by') rows.sort((a,b)=>nm(a.by).localeCompare(nm(b.by)) || nm(a.title).localeCompare(nm(b.title)));
@@ -895,6 +1053,8 @@ function render(){
   if(!rows.length){
     empty.innerHTML = !S.ready ? '<b>Opening your binder…</b>'
       : (q || g!=='All') ? '<b>Nothing matches</b>Try another search or tap All.'
+      : S.type === 'notes' ? '<b>No notes yet</b>Tap + to write one. Your household shares them, as on Home Board.'
+      : S.type === 'recipes' ? '<b>No recipes yet</b>Tap + to add one, or share a recipe page to Add to Binder.'
       : '<b>No '+TYPES[S.type].label.toLowerCase()+' yet</b>Tap + and paste a page. It lands here, formatted for reading.';
   }
 }
@@ -984,6 +1144,7 @@ function paintReader(){
   const meta = $('rMeta'); meta.textContent='';
   if(it.by) meta.appendChild(tag(it.by, 'sectag'));
   if(it.genre) meta.appendChild(tag(it.genre));
+  if(HBT.includes(it.type)) (it.tags || []).slice(1).forEach(t => meta.appendChild(tag(t)));
   if(it.example) meta.appendChild(tag('Example'));
   if(it.src && /^https?:\/\//i.test(it.src)){
     const a=document.createElement('a'); a.className='dtag'; a.href=it.src; a.target='_blank'; a.rel='noopener';
@@ -1000,6 +1161,7 @@ function paintBody(){
   const it = S.open, body = $('rBody');
   body.className = 'rbody ' + it.type; body.textContent = '';
   if(it.type === 'recipes'){ paintRecipe(it, body); return }
+  if(it.type === 'notes'){ paintNote(it, body); return }
   const text = (it.body||'').replace(/\r\n?/g,'\n');
   if(it.type==='stories'){
     let paras = text.split(/\n\s*\n/);
@@ -1160,9 +1322,12 @@ function guessMeta(txt){
 }
 function setEdType(t){
   S.edType = t;
-  const rec = t === 'recipes';
-  $('recBox').hidden = !rec; $('bodyField').hidden = $('actsRow').hidden = $('byField').hidden = rec;
-  $('attachHead').textContent = rec ? 'Photo' : 'Sheet music & photos';
+  const rec = t === 'recipes', note = t === 'notes';
+  $('recBox').hidden = !rec; $('bodyField').hidden = rec; $('actsRow').hidden = $('byField').hidden = rec || note;
+  $('bodyLbl').textContent = note ? 'Note' : 'Paste the page';
+  $('fBody').placeholder = note ? 'Write anything. Start a line with - for a bullet, [ ] for a checkbox, # for a heading.' : 'Long-press here and tap Paste. Copy the whole page if you like; Tidy strips the clutter.';
+  $('fGenreLbl').textContent = rec || note ? 'Tag' : 'Genre';
+  $('attachHead').textContent = rec ? 'Photo' : note ? 'Photos & files' : 'Sheet music & photos';
   for(const k in TYPES) $('tp-'+k).setAttribute('aria-pressed', String(k===t));
   $('fByLbl').textContent = TYPES[t].who;
   document.body.dataset.type = t;
@@ -1180,9 +1345,11 @@ function openEditor(it, quiet){
   $('tidyNote').textContent = '';
   S.edFiles = it && it.files ? it.files.map(f=>({...f})) : []; S.edNew = [];
   $('fIng').value = it ? it.ingredients || '' : ''; $('fSteps').value = it ? it.steps || '' : ''; $('fNote').value = it ? it.note || '' : '';
-  // a recipe stays a recipe (it lives in Home Board's list); a clipping can't become one
-  CLIP_TYPES.forEach(k => { $('tp-'+k).hidden = !!(it && it.type === 'recipes') });
-  $('tp-recipes').hidden = !(me() && me().household) || !!(it && it.type !== 'recipes');
+  // a recipe or note stays one (it lives in Home Board's list); a clipping can't become one
+  const inHB = !!(it && HBT.includes(it.type)), house = !!(me() && me().household);
+  CLIP_TYPES.forEach(k => { $('tp-'+k).hidden = inHB });
+  HBT.forEach(k => { $('tp-'+k).hidden = !house || !!(it && it.type !== k) });
+  $('typePick').style.gridTemplateColumns = 'repeat(' + [...$('typePick').children].filter(b => !b.hidden).length + ',minmax(0,1fr))';
   paintEdFiles();
   setEdType(it ? it.type : S.type);
   $('editor').hidden = false;
@@ -1516,12 +1683,12 @@ $('tidyBtn').onclick = () => { const r = tidy($('fBody').value); $('fBody').valu
 $('guessBtn').onclick = () => { if(!autoFill()) $('tidyNote').textContent = 'No title on the first line. Type it in.' };
 $('form').addEventListener('submit', async e => {
   e.preventDefault();
-  const title = $('fTitle').value.trim(), isRec = S.edType === 'recipes';
-  const body = isRec ? '' : tidy($('fBody').value).out;
+  const title = $('fTitle').value.trim(), isRec = S.edType === 'recipes', isNote = S.edType === 'notes';
+  const body = isRec ? '' : isNote ? $('fBody').value.replace(/\s+$/, '') : tidy($('fBody').value).out;
   if(S.edFiles.some(f=>f.pending)){ toast('Wait for uploads to finish'); return }
   const files = S.edFiles.filter(f=>!f.err).map(({id,type,name,size,path})=>(path ? {id,type,name,size,path} : {id,type,name,size}));
   if(isRec){ if(!$('fIng').value.trim() && !$('fSteps').value.trim()){ $('fIng').focus(); toast('Add ingredients or steps first'); return } }
-  else if(!body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
+  else if(!isNote && !body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
   if(!title){ $('fTitle').focus(); toast('Add a title first'); return }
   const prev = S.editing;
   const it = { ...(prev||{}), type:S.edType, title, by:$('fBy').value.trim(), genre:$('fGenre').value.trim(),
@@ -1537,7 +1704,7 @@ $('form').addEventListener('submit', async e => {
     if(S.open){ S.open = it; paintReader() }
     toast(prev ? 'Saved' : 'Added to '+TYPES[it.type].label);
   }catch(err){
-    toast(isRec && (err?.status===400 || err?.status===403) ? 'Only Home Board editors can change recipes.' : err?.code==='invalid_argument' ? 'You can read this binder but not change it.' : err?.code==='quota_exceeded' ? 'The binder is full. Delete a few clippings, then save.' : 'Couldn’t save. Check your connection and try again.');
+    toast((isRec || isNote) && (err?.status===400 || err?.status===403) ? 'Only Home Board editors can change ' + (isRec ? 'recipes.' : 'notes.') : err?.code==='invalid_argument' ? 'You can read this binder but not change it.' : err?.code==='quota_exceeded' ? 'The binder is full. Delete a few clippings, then save.' : 'Couldn’t save. Check your connection and try again.');
   }finally{ $('edSave').disabled = false }
 });
 
@@ -1600,12 +1767,13 @@ document.addEventListener('touchend', e => {
   if(S.open || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || e.target.closest('.dtags,.bottom')) return;
   const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
   if(Math.abs(dx) < 60 || Math.abs(dy) > 45) return;
-  const order = Object.keys(TYPES), i = order.indexOf(S.type);
+  const order = shownTabs(), i = order.indexOf(S.type);
+  if(i < 0) return;
   const n = dx < 0 ? Math.min(order.length-1, i+1) : Math.max(0, i-1);
   if(n!==i){ S.type = order[n]; ls.set('type', S.type); render() }
 }, {passive:true});
 
-/* deep links: #add, #lyrics, #stories, #chords */
+/* deep links: #add, #lyrics, #stories, #chords, #recipes, #notes */
 async function loadClip(){
   const id = S.pendingClip;
   if(!id || !me()) return;   // runs again after sign-in
@@ -1637,9 +1805,11 @@ function fromHash(){
 }
 window.addEventListener('hashchange', fromHash);
 
-applyMode(); paintSkins();
+applyMode(); paintSkins(); paintTabs();
 render(); fromHash(); initStore().then(initAssets);
 })();
+document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });   // no pinch zoom, like Home Board
+document.addEventListener('gesturechange', e => e.preventDefault(), { passive: false });
 </script>
 
 </html>
