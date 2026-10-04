@@ -61,6 +61,8 @@ body[data-type="chords"]{--sec:var(--chd)}
 body[data-type="recipes"]{--sec:var(--rec)}
 :root{--nts:#3a8fa3} :root[data-pb="dark"]{--nts:#5fb0c2}
 body[data-type="notes"]{--sec:var(--nts)}
+:root{--plc:#d0605a;--act:#b75aa6} :root[data-pb="dark"]{--plc:#e07a72;--act:#cf7cc0}
+body[data-type="places"]{--sec:var(--plc)} body[data-type="activities"]{--sec:var(--act)}
 
 *,*::before,*::after{box-sizing:border-box}
 html{height:100%;background:var(--bg)}
@@ -119,6 +121,44 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .rbody.notes .tick i svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
 .rbody.notes .tick.on i{background:var(--sec);border-color:var(--sec);color:#fff}
 .rbody.notes .tick.on span{color:var(--muted);text-decoration:line-through}
+/* places and activities */
+.div b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dividers.six{gap:4px}
+.dividers.six .div{padding-left:1px;padding-right:1px}
+.dividers.six .div b{font-size:10.5px;letter-spacing:-.25px}
+body[data-type="notes"] #fBody,body[data-type="places"] #fBody,body[data-type="activities"] #fBody{font-family:var(--f-ui);font-size:16px;line-height:1.45;white-space:pre-wrap;min-height:130px}
+.rbody .pacts > a{color:var(--ink)!important}
+.rbody .pacts > .main,.rbody .pacts > .did{color:#fff!important}
+#list li.act{display:flex;align-items:center;gap:12px}
+#list li.act .item{flex:1;min-width:0}
+.ckb{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);background:none;display:grid;place-items:center;padding:0;color:transparent;transition:background-color .15s,border-color .15s,transform .12s}
+.ckb svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.ckb:active{transform:scale(.9)}
+li.done .ckb{background:var(--act);border-color:var(--act);color:#fff}
+li.done .item .name{color:var(--muted);text-decoration:line-through}
+#list li.grp{font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding:18px 0 4px;border-bottom:.5px solid var(--hair)}
+.pcard{background:var(--sheet);border-radius:14px;padding:12px 14px;margin:4px 0 14px;display:flex;flex-direction:column;gap:6px;font-size:16px}
+.pcard .sub{color:var(--muted);font-size:14px;font-weight:600}
+.pcard .hrs{color:var(--muted);font-size:14px;white-space:pre-line}
+.pacts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.pacts a,.pacts button{display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:18px;border:0;background:var(--chip);color:var(--ink);font:inherit;font-size:15px;font-weight:700;text-decoration:none}
+.pacts .main{background:var(--sec);color:#fff}
+.pacts .did{background:var(--act);color:#fff}
+.rbody.places,.rbody.activities{font-size:calc(17px * var(--fs));line-height:1.5}
+.rbody.places p,.rbody.activities p{margin:0 0 .35em}
+.rbody.places h3,.rbody.activities h3{margin:.9em 0 .3em;font-size:1.05em;font-weight:800}
+.rbody.places ul,.rbody.activities ul,.rbody.places ol,.rbody.activities ol{margin:.2em 0 .5em;padding-left:1.3em}
+.rbody.places .gap,.rbody.activities .gap{height:.6em}
+.rbody.places a,.rbody.activities a{color:var(--ben)}
+.rbody .tick{display:flex;gap:10px;align-items:flex-start;padding:5px 0;cursor:pointer}
+.rbody .tick i{flex:none;width:22px;height:22px;margin-top:1px;border-radius:50%;border:2px solid var(--muted);display:grid;place-items:center;color:transparent}
+.rbody .tick i svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.rbody .tick.on i{background:var(--sec);border-color:var(--sec);color:#fff}
+.rbody .tick.on span{color:var(--muted);text-decoration:line-through}
+.linkrow{display:flex;gap:8px}
+.linkrow input{flex:1;min-width:0}
+.linkrow .dtag{flex:none;height:auto;padding:0 14px}
+.tsugg{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 /* tab bar editor in the menu */
 .sh-sub{display:flex;align-items:center;justify-content:space-between;margin:18px 4px 6px}
 .sh-sub h3{margin:0!important}
@@ -142,7 +182,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 .bottom{position:fixed;left:0;right:0;bottom:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-top:.5px solid var(--hair);padding:0 12px calc(8px + env(safe-area-inset-bottom,0px))}
 .dividers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:500px;margin:0 auto;align-items:start}
 .div{--c:var(--lyr);position:relative;border:0;background:var(--chip);color:var(--muted);border-radius:0 0 14px 14px;padding:12px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;transition:transform .22s cubic-bezier(.3,1.4,.5,1),background-color .25s,color .25s}
-.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)} .div[data-t="recipes"]{--c:var(--rec)} .div[data-t="notes"]{--c:var(--nts)}
+.div[data-t="stories"]{--c:var(--sto)} .div[data-t="chords"]{--c:var(--chd)} .div[data-t="recipes"]{--c:var(--rec)} .div[data-t="notes"]{--c:var(--nts)} .div[data-t="places"]{--c:var(--plc)} .div[data-t="activities"]{--c:var(--act)}
 .div::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:var(--c);opacity:.55;transition:opacity .2s}
 .div svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .div b{font-size:12px;font-weight:800;letter-spacing:.2px}
@@ -306,8 +346,8 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
         <button class="round" id="upBtn" aria-label="Upload sheet music or photos" hidden>
           <svg viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg>
         </button>
-        <button class="round" id="moreBtn" aria-label="Appearance and Share shortcut">
-          <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg>
+        <button class="round" id="moreBtn" aria-label="Menu: tabs, appearance and shortcuts">
+          <svg viewBox="0 0 24 24"><path d="M4.5 7h15M4.5 12h15M4.5 17h15"/></svg>
         </button>
       </div>
     </header>
@@ -345,6 +385,14 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
     <button class="div" role="tab" data-t="notes" id="tab-notes" hidden>
       <svg viewBox="0 0 24 24"><path d="M6 3.5h8.5L19 8v12.5H6z"/><path d="M14 3.5V8h5M9 12.5h7M9 16h5"/></svg>
       <b>Notes</b><i id="n-notes">0</i>
+    </button>
+    <button class="div" role="tab" data-t="places" id="tab-places">
+      <svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+      <b>Places</b><i id="n-places">0</i>
+    </button>
+    <button class="div" role="tab" data-t="activities" id="tab-activities">
+      <svg viewBox="0 0 24 24"><path d="M12 2.5l6 7.5-6 7.5-6-7.5z"/><path d="M6 10h12M12 2.5v15"/><path d="M12 17.5c-1.6 1.2 1.2 2.3-.3 4"/></svg>
+      <b>Activities</b><i id="n-activities">0</i>
     </button>
   </div>
 </nav>
@@ -387,6 +435,8 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <button type="button" data-t="chords" id="tp-chords">Tabs</button>
       <button type="button" data-t="recipes" id="tp-recipes" hidden>Recipe</button>
       <button type="button" data-t="notes" id="tp-notes" hidden>Note</button>
+      <button type="button" data-t="places" id="tp-places">Place</button>
+      <button type="button" data-t="activities" id="tp-activities">Activity</button>
     </div>
     <div id="attachBox" hidden>
       <h3 id="attachHead">Sheet music &amp; photos</h3>
@@ -397,6 +447,15 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <label class="field"><span>Ingredients · one per line</span><textarea id="fIng" placeholder="2 cups flour&#10;1 tsp salt"></textarea></label>
       <label class="field"><span>Steps · one per line</span><textarea id="fSteps" placeholder="Heat the oven to 375°F&#10;Mix the dry ingredients"></textarea></label>
       <label class="field"><span>Notes</span><textarea id="fNote" placeholder="Optional"></textarea></label>
+    </div>
+    <div id="placeBox" hidden>
+      <label class="field"><span>Google Maps or Apple Maps link</span>
+        <span class="linkrow"><input id="fMaps" type="url" inputmode="url" placeholder="In Maps: Share → Copy link, then paste"><button type="button" class="dtag" id="mapsGo">Look up</button></span></label>
+      <label class="field"><span>Address</span><input id="fAddr" autocomplete="off"></label>
+      <div class="two">
+        <label class="field"><span>Phone</span><input id="fPhone" type="tel" inputmode="tel" autocomplete="off"></label>
+        <label class="field"><span>Hours</span><input id="fHours" placeholder="Optional" autocomplete="off"></label>
+      </div>
     </div>
     <label class="field" id="bodyField"><span id="bodyLbl">Paste the page</span>
       <textarea id="fBody" placeholder="Long-press here and tap Paste. Copy the whole page if you like; Tidy strips the clutter."></textarea>
@@ -414,7 +473,17 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <label class="field"><span id="fGenreLbl">Genre</span><input id="fGenre" list="genreList" placeholder="Optional"></label>
     </div>
     <datalist id="genreList"></datalist>
-    <label class="field"><span>Source link</span><input id="fSrc" type="url" inputmode="url" placeholder="Optional"></label>
+    <div id="actBox" hidden>
+      <div class="two">
+        <label class="field"><span>When</span><input id="fWhen" type="date"></label>
+        <label class="field"><span>Where</span><input id="fWhere" placeholder="Optional" autocomplete="off"></label>
+      </div>
+    </div>
+    <div id="tagsBox" hidden>
+      <label class="field"><span>Tags</span><input id="fTags" placeholder="Fun for family, Date night" autocomplete="off"></label>
+      <div class="tsugg" id="tagSugg"></div>
+    </div>
+    <label class="field"><span id="fSrcLbl">Source link</span><input id="fSrc" type="url" inputmode="url" placeholder="Optional"></label>
   </form>
 </div>
 
@@ -423,8 +492,8 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
   <div class="scrim" id="moreScrim"></div>
   <div class="sheet" role="dialog" aria-label="More">
     <div class="grab"></div>
-    <div class="sh-head"><h2>More</h2><button class="linkbtn" id="moreDone">Done</button></div>
-    <div class="sh-sub"><h3>Tabs</h3><button type="button" class="linkbtn" id="tabsEdit">Edit</button></div>
+    <div class="sh-head"><h2>Menu</h2><button class="linkbtn" id="moreDone">Close</button></div>
+    <div class="sh-sub"><h3>Tabs <small style="text-transform:none;letter-spacing:0;font-weight:600">· tap Edit to move, show or hide</small></h3><button type="button" class="linkbtn" id="tabsEdit">Edit</button></div>
     <div class="tgroup" id="tabList"></div>
     <h3>Appearance</h3>
     <div class="seg" id="modeSeg">
@@ -439,6 +508,14 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <button type="button" data-s="new" id="s-new">Newest</button>
       <button type="button" data-s="az" id="s-az">A–Z</button>
       <button type="button" data-s="by" id="s-by">By name</button>
+    </div>
+    <h3>Places from Google Maps</h3>
+    <div class="help" style="margin-top:0">
+      <ol>
+        <li>In Google Maps (or Apple Maps), open the place and tap <b>Share → Copy link</b>.</li>
+        <li>In the binder, go to <b>Places</b>, tap <b>+</b> and paste the link. The name, address and map spot fill in; add your tags and Save.</li>
+        <li>On a laptop or in Safari, <b>Add to Binder</b> works on a Google Maps place page or a restaurant’s, park’s or museum’s own page too.</li>
+      </ol>
     </div>
     <h3>Share shortcut (iPhone)</h3>
     <div class="help" style="margin-top:0">
@@ -577,6 +654,63 @@ function findRecipe(){
   var ings = [].concat(found.recipeIngredient || found.ingredients || []).map(plain).filter(Boolean);
   return { name: plain(found.name), ingredients: ings, steps: steps, image: typeof img === 'string' ? img : '', yield: y ? plain(y) : '', total: found.totalTime || '' };
 }
+// Places: Google Maps in Safari, or any business / park / museum page with schema.org data
+function ldFind(test){
+  var found = null;
+  function walk(o){
+    if(found || !o || typeof o !== 'object') return;
+    if(Array.isArray(o)){ for(var i = 0; i < o.length; i++) walk(o[i]); return }
+    if(test(o)){ found = o; return }
+    if(o['@graph']) walk(o['@graph']);
+    if(o.mainEntity) walk(o.mainEntity);
+  }
+  var ss = document.querySelectorAll('script[type="application/ld+json"]');
+  for(var i = 0; i < ss.length && !found; i++){ try{ walk(JSON.parse(ss[i].textContent)) }catch(e){} }
+  return found;
+}
+function typesOf(o){ return [].concat(o && o['@type'] || []).map(String) }
+function imgOf(i){ if(Array.isArray(i)) i = i[0]; if(i && typeof i === 'object') i = i.url || i.contentUrl; return typeof i === 'string' ? i : '' }
+function addrOf(a){
+  if(!a) return ''; if(Array.isArray(a)) a = a[0]; if(typeof a === 'string') return plain(a);
+  return [a.streetAddress, a.addressLocality, [a.addressRegion, a.postalCode].filter(Boolean).join(' ')].map(plain).filter(Boolean).join(', ');
+}
+function hoursOf(h){
+  if(!h) return ''; if(typeof h === 'string') return plain(h);
+  return [].concat(h).map(function(x){
+    if(typeof x === 'string') return x;
+    if(!x || !x.dayOfWeek) return '';
+    return [].concat(x.dayOfWeek).map(function(d){ return String(d).replace(/^.*\//, '').slice(0, 3) }).join(', ') + ' ' + String(x.opens || '').slice(0, 5) + '–' + String(x.closes || '').slice(0, 5);
+  }).filter(Boolean).join('; ');
+}
+var PLACE_T = /^(LocalBusiness|Restaurant|FoodEstablishment|CafeOrCoffeeShop|Bakery|BarOrPub|Brewery|Winery|IceCreamShop|FastFoodRestaurant|TouristAttraction|Place|Park|Museum|Zoo|Aquarium|AmusementPark|Playground|Library|MovieTheater|BowlingAlley|SportsActivityLocation|EntertainmentBusiness|ArtGallery|Store|ShoppingCenter|Campground|Beach|LandmarksOrHistoricalBuildings|CivicStructure|LodgingBusiness|Hotel|Resort|PerformingArtsTheater|StadiumOrArena|SkiResort|GolfCourse|ChildCare|NightClub|Winery|TouristDestination)$/;
+function findPlace(){
+  var m = location.href.match(/^https:\/\/(?:www\.)?google\.[a-z.]+\/maps\/place\/([^\/?]+)(?:\/@(-?\d+\.\d+),(-?\d+\.\d+))?/);
+  if(m){
+    var lab = function(sel){ var e = document.querySelector(sel); return e ? (e.getAttribute('aria-label') || e.textContent || '').replace(/^[^:]{1,20}:\s*/, '').trim() : '' };
+    var h1 = document.querySelector('h1'), web = document.querySelector('a[data-item-id="authority"]');
+    var ll = location.href.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || [0, m[2] || '', m[3] || ''];
+    var cat = document.querySelector('button[jsaction*="category"]');
+    return { name: (h1 && h1.textContent.trim()) || decodeURIComponent(m[1].replace(/\+/g, ' ')), address: lab('button[data-item-id="address"]'),
+      phone: lab('button[data-item-id^="phone"]'), website: web ? web.href : '', lat: ll[1], lng: ll[2], rating: '', category: cat ? cat.textContent.trim() : '',
+      hours: '', price: '', maps: location.href, image: '' };
+  }
+  var o = ldFind(function(o){ return o.address && typesOf(o).some(function(t){ return PLACE_T.test(t) }) });
+  if(!o) return null;
+  var g = o.geo || {}, r = o.aggregateRating || {};
+  return { name: plain(o.name), address: addrOf(o.address), phone: plain(o.telephone), website: typeof o.url === 'string' ? o.url : '',
+    lat: g.latitude ? String(g.latitude) : '', lng: g.longitude ? String(g.longitude) : '', rating: r.ratingValue ? String(r.ratingValue) : '',
+    category: typesOf(o).filter(function(t){ return t !== 'LocalBusiness' && t !== 'Place' })[0] || '', hours: hoursOf(o.openingHoursSpecification || o.openingHours),
+    price: plain(o.priceRange), maps: typeof o.hasMap === 'string' ? o.hasMap : '', image: imgOf(o.image) };
+}
+// Activities: event pages (story times, festivals, classes) usually carry schema.org Event data
+function findEvent(){
+  var o = ldFind(function(o){ return typesOf(o).some(function(t){ return /Event$/.test(t) }) && o.startDate });
+  if(!o) return null;
+  var loc = [].concat(o.location || [])[0] || {};
+  return { name: plain(o.name), when: String(o.startDate || ''), ends: String(o.endDate || ''), where: typeof loc === 'string' ? plain(loc) : plain(loc.name),
+    address: typeof loc === 'object' ? addrOf(loc.address) : '', description: plain(o.description).slice(0, 800), image: imgOf(o.image) };
+}
+function metaOf(p){ var e = document.querySelector('meta[property="' + p + '"],meta[name="' + p + '"]'); return e && e.content ? e.content.trim() : '' }
 var KEY = '__CLIP_KEY__';   // your household's key, filled in by the binder's Copy button
 var enc = encodeURIComponent, title = '', text = '', kind = '';
 // Always hand Shortcuts a link, even if this page breaks the script or the server is slow
@@ -585,7 +719,10 @@ function finish(url){ if(!sent){ sent = true; completion(url) } }
 setTimeout(function(){ finish(BINDER + '#add&t=' + enc((title || document.title || '').slice(0, 200)) + '&u=' + enc(location.href) + '&nx=1') }, 6000);
 try{
   var recipe = null; try{ recipe = findRecipe() }catch(e){}
+  var place = null, ev = null;
   if(recipe && (recipe.ingredients.length || recipe.steps.length)){ kind = 'recipe'; title = recipe.name || titleOf(); text = JSON.stringify(recipe) }
+  else if((place = (function(){ try{ return findPlace() }catch(e){ return null } })()) && place.name){ kind = 'place'; title = place.name; text = JSON.stringify(place) }
+  else if((ev = (function(){ try{ return findEvent() }catch(e){ return null } })()) && ev.name){ kind = 'event'; title = ev.name; text = JSON.stringify(ev) }
   else {
   var site = siteReader();
   if(site && site.text.length >= 20){ text = site.text; title = site.title || titleOf() }
@@ -600,12 +737,13 @@ try{
 }catch(e){}
 title = (title || '').replace(/\s+/g, ' ').trim();   // Genius and others use non-breaking spaces in names
 var short = BINDER + '#add&t=' + enc(title.slice(0, 200)) + '&u=' + enc(location.href);
-var clip = { k: kind, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000) };
+var clip = { k: kind, t: title.slice(0, 300), u: location.href.slice(0, 2000), x: text.slice(0, 150000),
+  d: (metaOf('og:description') || metaOf('description')).slice(0, 1000), img: metaOf('og:image').slice(0, 2000) };
 if(typeof BOOKMARK === 'function'){ sent = true; BOOKMARK(clip) }   // laptop bookmark: the binder tab is already opening
 else try{
   fetch(BINDER + 'api/collections/clip_inbox/records', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ key: KEY, k: clip.k, t: clip.t, u: clip.u, x: clip.x })
+    body: JSON.stringify({ key: KEY, k: clip.k, t: clip.t, u: clip.u, x: clip.x, d: clip.d, img: clip.img })
   }).then(function(r){ return r.ok ? r.json() : Promise.reject(r.status) })
     .then(function(rec){ finish(BINDER + '#add&clip=' + rec.id) })
     .catch(function(){ finish(short + '&nx=1') });
@@ -672,10 +810,17 @@ const TYPES = {
   stories:{label:'Stories', one:'story', who:'Author'},
   chords: {label:'Tabs', one:'tab', who:'Artist'},
   recipes:{label:'Recipes', one:'recipe', who:'From'},  // Home Board's own recipe list
-  notes:  {label:'Notes', one:'note', who:''}            // Home Board's own notes list
+  notes:  {label:'Notes', one:'note', who:''},           // Home Board's own notes list
+  places: {label:'Places', one:'place', who:''},
+  activities:{label:'Activities', one:'activity', who:''}
 };
 const CLIP_TYPES = ['lyrics','stories','chords'];
-const HBT = ['recipes','notes'];   // these live in Home Board's tables, for logins in a household
+const HBT = ['recipes','notes'];
+const TAGGED = ['places','activities'];                     // own tags, e.g. "Fun for family"
+const BTYPES = ['lyrics','stories','chords','places','activities'];   // kept in the binder's own table
+const TAG_IDEAS = { places: ['Fun for family','Date night','Restaurants','Parks','Rainy day','Road trip'],
+                    activities: ['With the girls','Rainy day','Outdoors','Crafts','Free','Date night','Seasonal'] };
+function splitTags(v){ const out = []; String(v || '').split(',').forEach(t => { t = t.trim(); if(t && !out.some(x => x.toLowerCase() === t.toLowerCase())) out.push(t) }); return out }   // these live in Home Board's tables, for logins in a household
 const SKINS = [
   {k:'', n:'Classic', dots:['#4f7bd4','#8a6bb8','#c98a3e']},
   {k:'barbie', n:'Barbie', dots:['#e0218a','#5b7fd6','#f0d5e1']},
@@ -733,9 +878,9 @@ function useLocal(){
 }
 /* PocketBase on bkweb: same server and logins as Home Board. Each login sees only its own clippings. */
 const pb = new PocketBase(location.origin); pb.autoCancellation(false);
-const FIELDS = ['type','title','by','genre','src','body','files','added','updated'];
+const FIELDS = ['type','title','by','genre','src','body','files','added','updated','tags','info','done'];
 function me(){ return pb.authStore.isValid && pb.authStore.record ? pb.authStore.record : null }
-function toItem(r){ const o = {id:r.id}; FIELDS.forEach(k => o[k] = r[k]); if(!Array.isArray(o.files)) o.files = []; return o }
+function toItem(r){ const o = {id:r.id}; FIELDS.forEach(k => o[k] = r[k]); if(!Array.isArray(o.files)) o.files = []; if(!Array.isArray(o.tags)) o.tags = []; if(!o.info || typeof o.info !== 'object') o.info = {}; o.done = !!o.done; return o }
 function keepLocal(it){
   const i = S.items.findIndex(x=>x.id===it.id); if(i>=0) S.items[i] = it; else S.items.push(it);
   render();
@@ -866,14 +1011,171 @@ function paintNote(it, body){
   }));
 }
 
+/* ---------- places and activities ---------- */
+async function toggleDone(it){
+  const next = {...it, done: !it.done, info: {...(it.info || {}), doneAt: it.done ? null : Date.now()}, updated: Date.now()};
+  try{ await store.save(next); toast(next.done ? 'Nice. Marked done.' : 'Back on the list'); if(S.open && S.open.id === it.id){ S.open = next; paintReader() } }
+  catch{ toast('Couldn’t save. Check your connection.') }
+}
+function richInto(body, it){   // same light formatting as Notes; ticking a box saves it
+  if(!String(it.body || '').trim()) return;
+  const box = document.createElement('div'); box.innerHTML = richText(it.body); body.appendChild(box);
+  box.querySelectorAll('.tick').forEach(t => t.addEventListener('click', async e => {
+    if(e.target.closest('a')) return;
+    const lines = String(it.body || '').split('\n'), i = +t.dataset.line;
+    lines[i] = lines[i].replace(/\[( |x|X)\]/, (m, c) => c === ' ' ? '[x]' : '[ ]');
+    it.body = lines.join('\n'); t.classList.toggle('on');
+    try{ await store.save({...it, updated: Date.now()}) }catch{ t.classList.toggle('on'); toast('Couldn’t save. Check your connection.') }
+  }));
+}
+function mapLinks(name, i){
+  const q = encodeURIComponent, ll = i.lat && i.lng ? i.lat + ',' + i.lng : '';
+  const apple = 'https://maps.apple.com/?q=' + q(name || i.address || '') + (ll ? '&ll=' + ll : i.address ? '&address=' + q(i.address) : '');
+  const google = /^https:\/\/([a-z.]*google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps)/i.test(i.maps || '') ? i.maps
+    : 'https://www.google.com/maps/search/?api=1&query=' + q(ll || [name, i.address].filter(Boolean).join(' '));
+  return { apple, google };
+}
+function linkBtn(text, href, cls){ const a = document.createElement('a'); a.textContent = text; a.href = href; a.target = '_blank'; a.rel = 'noopener'; if(cls) a.className = cls; return a }
+function paintPlace(it, body){
+  const i = it.info || {}, card = document.createElement('div'); card.className = 'pcard';
+  const sub = [i.category, i.rating ? '★ ' + i.rating : '', i.price].filter(Boolean).join(' · ');
+  if(sub){ const d = document.createElement('div'); d.className = 'sub'; d.textContent = sub; card.appendChild(d) }
+  if(i.address){ const d = document.createElement('div'); d.textContent = i.address; card.appendChild(d) }
+  if(i.hours){ const d = document.createElement('div'); d.className = 'hrs'; d.textContent = String(i.hours).replace(/;\s*/g, '\n'); card.appendChild(d) }
+  if(card.children.length) body.appendChild(card);
+  const acts = document.createElement('div'), m = mapLinks(it.title, i); acts.className = 'pacts';
+  acts.append(linkBtn('Apple Maps', m.apple, 'main'), linkBtn('Google Maps', m.google));
+  if(i.phone) acts.appendChild(linkBtn('Call', 'tel:' + String(i.phone).replace(/[^\d+]/g, '')));
+  if(me() && me().household){ const p = document.createElement('button'); p.type = 'button'; p.textContent = '+ Plans'; p.onclick = () => toPlans(it); acts.appendChild(p) }
+  body.appendChild(acts);
+  richInto(body, it);
+}
+// Home Board's Plans: with a date it goes On the Calendar; without one it waits under Ideas
+function toPlans(it){
+  const i = it.info || {}, wrap = document.createElement('div');
+  const hint = document.createElement('div'); hint.className = 'hint'; hint.textContent = 'Leave the date empty to save it as an idea for later.';
+  const two = document.createElement('div'); two.className = 'two';
+  const fld = (lbl, input) => { const l = document.createElement('label'); l.className = 'field'; const s = document.createElement('span'); s.textContent = lbl; l.append(s, input); return l };
+  const d = document.createElement('input'); d.type = 'date'; d.value = /^\d{4}-\d{2}-\d{2}/.test(i.when || '') ? i.when.slice(0, 10) : '';
+  const t = document.createElement('input'); t.type = 'time'; const tm = String(i.when || '').match(/T(\d{2}:\d{2})/); if(tm) t.value = tm[1];
+  two.append(fld('Date', d), fld('Time', t)); wrap.append(two, hint);
+  openPick('Add to Plans', wrap, 'Add', async () => {
+    const now = new Date().toISOString(), date = d.value || '';
+    const where = it.type === 'places' ? [it.title, i.address].filter(Boolean).join(', ') : [i.where, i.address].filter(Boolean).join(', ');
+    const note = [it.src, it.type === 'places' ? mapLinks(it.title, i).google : ''].filter(Boolean).join('\n');
+    try{
+      await pb.collection('plans').create({ name: it.title.slice(0, 300), note, date, start_time: date ? t.value : '', end_time: '', location: where.slice(0, 500), idea: !date, created_at: now, updated_at: now });
+      closePick(); toast(date ? 'Added to Plans for ' + new Date(date + 'T12:00:00').toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'}) : 'Added to Plans as an idea');
+    }catch(e){ toast(hbError(e, 'Plans')) }
+  });
+}
+function paintActivity(it, body){
+  const i = it.info || {}, acts = document.createElement('div'); acts.className = 'pacts';
+  const did = document.createElement('button'); did.type = 'button'; did.className = it.done ? 'did' : 'main';
+  did.textContent = it.done ? '✓ Done' + (i.doneAt ? ' · ' + new Date(i.doneAt).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : '') : 'Mark as done';
+  did.onclick = () => toggleDone(it); acts.appendChild(did);
+  if(i.where || i.address){ const m = mapLinks(i.where, {address: i.address || i.where}); acts.appendChild(linkBtn('Directions', m.apple)) }
+  if(me() && me().household){ const p = document.createElement('button'); p.type = 'button'; p.textContent = '+ Plans'; p.onclick = () => toPlans(it); acts.appendChild(p) }
+  body.appendChild(acts);
+  if(i.when || i.where){
+    const card = document.createElement('div'); card.className = 'pcard';
+    if(i.when){ const d = document.createElement('div'); const w = new Date(String(i.when).length === 10 ? i.when + 'T12:00:00' : i.when);
+      d.textContent = isNaN(w) ? i.when : w.toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric', year: w.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined}) + (String(i.when).length > 10 && /T\d/.test(i.when) ? ' · ' + w.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'}) : '');
+      card.appendChild(d) }
+    if(i.where || i.address){ const d = document.createElement('div'); d.className = 'sub'; d.textContent = [i.where, i.address].filter(Boolean).join(' · '); card.appendChild(d) }
+    body.appendChild(card);
+  }
+  richInto(body, it);
+}
+// a picture from the page, kept on the server like recipe photos
+function attachPhoto(url){
+  if(!/^https:\/\//i.test(url || '')) return;
+  const row = {name: 'Photo', type: 'image/jpeg', size: 0, pending: true};
+  S.edFiles.push(row); paintEdFiles();
+  pb.send('/api/binder/photo', {method: 'POST', body: {url}}).then(up => {
+    Object.assign(row, up, {pending: false}); FILEURL[up.id] = up.path; S.edNew.push(up.id); paintEdFiles();
+  }).catch(() => { S.edFiles = S.edFiles.filter(f => f !== row); paintEdFiles() });
+}
+const isMapsLink = u => /^https:\/\/((www\.|maps\.)?google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.apple\.com|maps\.apple\/)/i.test(u || '');
+function fillPlace(r){
+  if(r.name && !$('fTitle').value.trim()) $('fTitle').value = r.name;
+  if(r.address && !$('fAddr').value.trim()) $('fAddr').value = r.address;
+  if(r.phone && !$('fPhone').value.trim()) $('fPhone').value = r.phone;
+  if(r.hours && !$('fHours').value.trim()) $('fHours').value = r.hours;
+  if(r.website && !$('fSrc').value.trim()) $('fSrc').value = r.website;
+  if(r.maps && !$('fMaps').value.trim()) $('fMaps').value = r.maps;
+  ['lat','lng','rating','category','price'].forEach(k => { if(r[k]) S.edInfo[k] = String(r[k]) });
+}
+function appleMaps(u){
+  try{ const x = new URL(u); if(x.hostname !== 'maps.apple.com') return null;
+    const p = x.searchParams, ll = (p.get('ll') || p.get('sll') || p.get('coordinate') || '').split(',');
+    const r = { name: p.get('q') || p.get('name') || '', address: p.get('address') || '', lat: ll[0] || '', lng: ll[1] || '', maps: u };
+    return r.name || r.address || r.lat ? r : null }catch{ return null }
+}
+async function lookUpMaps(quiet){
+  const u = $('fMaps').value.trim(); if(!u) return;
+  const a = appleMaps(u);
+  if(a){ fillPlace(a); $('tidyNote').textContent = 'Filled in from the Apple Maps link. Check it, then Save.'; return }
+  if(!isMapsLink(u)){ if(!quiet) $('tidyNote').textContent = 'That doesn’t look like a Google Maps or Apple Maps link.'; return }
+  $('tidyNote').textContent = 'Looking that up…'; $('mapsGo').disabled = true;
+  try{ const r = await pb.send('/api/binder/place-link', {method: 'POST', body: {url: u}}); fillPlace(r); $('tidyNote').textContent = 'Filled in from Google Maps. Check it, then Save.' }
+  catch(e){ $('tidyNote').textContent = e?.response?.message || e?.data?.message || 'Couldn’t read that link. Fill in the details by hand.' }
+  finally{ $('mapsGo').disabled = false }
+}
+$('mapsGo').onclick = () => lookUpMaps(false);
+$('fMaps').addEventListener('change', () => lookUpMaps(true));
+$('fMaps').addEventListener('paste', () => setTimeout(() => lookUpMaps(true), 0));
+function paintTagSugg(){
+  const cur = splitTags($('fTags').value).map(t => t.toLowerCase()), box = $('tagSugg'); box.textContent = '';
+  const pool = []; [...genresFor(S.edType), ...(TAG_IDEAS[S.edType] || [])].forEach(t => { if(!pool.some(x => x.toLowerCase() === t.toLowerCase())) pool.push(t) });
+  pool.forEach(t => { const b = document.createElement('button'); b.type = 'button'; b.className = 'dtag'; b.textContent = t;
+    b.setAttribute('aria-pressed', String(cur.includes(t.toLowerCase())));
+    b.onclick = () => { const list = splitTags($('fTags').value), i = list.findIndex(x => x.toLowerCase() === t.toLowerCase());
+      if(i >= 0) list.splice(i, 1); else list.push(t); $('fTags').value = list.join(', '); paintTagSugg() };
+    box.appendChild(b) });
+}
+$('fTags').addEventListener('input', paintTagSugg);
+// a page shared from Safari: if it's going into Places or Activities, use its short description and picture instead of the whole page
+function applyClipMeta(){
+  const c = S.clipMeta; if(!c || c.used || !TAGGED.includes(S.edType)) return;
+  c.used = true;
+  if($('fBody').value === c.text) $('fBody').value = c.d || '';
+  if(c.img && !S.edFiles.length) attachPhoto(c.img);
+}
+function prefillPlace(r){
+  let p = null; try{ p = JSON.parse(r.x || '') }catch{}
+  S.typeTouched = true; setEdType('places');
+  if(!p){ $('fTitle').value = r.t || ''; return }
+  fillPlace(Object.assign({}, p, {website: p.website || (isMapsLink(r.u) ? '' : r.u), maps: p.maps || (isMapsLink(r.u) ? r.u : '')}));
+  let host = ''; try{ host = new URL(r.u).hostname.replace(/^www\./, '') }catch{}
+  $('tidyNote').textContent = (host ? 'Place from ' + host + '. ' : '') + 'Add your tags, then Save.';
+  attachPhoto(p.image || r.img);
+}
+function prefillEvent(r){
+  let e = null; try{ e = JSON.parse(r.x || '') }catch{}
+  S.typeTouched = true; setEdType('activities');
+  $('fTitle').value = (e && e.name) || r.t || ''; $('fSrc').value = r.u || '';
+  if(e){
+    if(/^\d{4}-\d{2}-\d{2}/.test(e.when)) $('fWhen').value = e.when.slice(0, 10);
+    S.edInfo.when = e.when || ''; S.edInfo.address = e.address || '';
+    $('fWhere').value = e.where || e.address || '';
+    $('fBody').value = e.description || r.d || '';
+    attachPhoto(e.image || r.img);
+  }
+  $('tidyNote').textContent = 'Event details filled in. Add your tags, then Save.';
+}
+
 /* ---------- tab bar: order and which tabs show, saved per phone (like Home Board) ---------- */
-const ALLTABS = ['lyrics','stories','chords','recipes','notes'];
+const ALLTABS = ['lyrics','stories','chords','recipes','notes','places','activities'];
+const MAXBAR = 6;
 function availableTab(t){ return !HBT.includes(t) || !!(me() && me().household) }
 function tabPrefs(){
   const p = ls.get('tabs', null) || {};
   const order = (Array.isArray(p.order) ? p.order : []).filter((t, i, a) => ALLTABS.includes(t) && a.indexOf(t) === i);
   ALLTABS.forEach(t => { if(!order.includes(t)) order.push(t) });
-  return { order, hidden: (Array.isArray(p.hidden) ? p.hidden : []).filter(t => ALLTABS.includes(t)) };
+  const hidden = (Array.isArray(p.hidden) ? p.hidden : []).filter(t => ALLTABS.includes(t));
+  let n = 0; order.forEach(t => { if(availableTab(t) && !hidden.includes(t) && ++n > MAXBAR) hidden.push(t) });   // the bar holds 6; the rest wait in the menu
+  return { order, hidden };
 }
 function shownTabs(){ const p = tabPrefs(); return p.order.filter(t => availableTab(t) && !p.hidden.includes(t)) }
 let editingTabs = false;
@@ -886,6 +1188,7 @@ function paintTabs(){
   ALLTABS.forEach(t => { $('tab-'+t).hidden = !shown.includes(t) });
   shown.forEach(t => bar.appendChild($('tab-'+t)));
   bar.style.gridTemplateColumns = 'repeat(' + Math.max(1, shown.length) + ',minmax(0,1fr))';
+  bar.classList.toggle('six', shown.length >= 6);
   paintTabList();
 }
 function paintTabList(){
@@ -897,9 +1200,9 @@ function paintTabList(){
     const ctl = editingTabs ? '<span class="ctl">' +
       '<button type="button" data-act="up" aria-label="Move ' + TYPES[t].label + ' up"' + (i === 0 ? ' disabled' : '') + '>' + TUP + '</button>' +
       '<button type="button" data-act="down" aria-label="Move ' + TYPES[t].label + ' down"' + (i === avail.length - 1 ? ' disabled' : '') + '>' + TDOWN + '</button>' +
-      '<button type="button" data-act="eye" class="eye' + (off ? ' off' : '') + '" aria-pressed="' + !off + '" aria-label="' + (off ? 'Show ' : 'Hide ') + TYPES[t].label + ' on the tab bar"' + (!off && shown.length === 1 ? ' disabled' : '') + '>' + (off ? TNOEYE : TEYE) + '</button></span>'
+      '<button type="button" data-act="eye" class="eye' + (off ? ' off' : '') + '" aria-pressed="' + !off + '" aria-label="' + (off ? 'Show ' : 'Hide ') + TYPES[t].label + ' on the tab bar"' + ((!off && shown.length === 1) || (off && shown.length >= MAXBAR) ? ' disabled' : '') + (off && shown.length >= MAXBAR ? ' title="The tab bar holds 6. Hide one first."' : '') + '>' + (off ? TNOEYE : TEYE) + '</button></span>'
       : (off ? '<span class="tg">Hidden</span>' : '');
-    return '<div class="trow' + (off ? ' off' : '') + '" data-t="' + t + '" role="button" tabindex="0"><span class="ico" style="--c:var(' + ({lyrics:'--lyr',stories:'--sto',chords:'--chd',recipes:'--rec',notes:'--nts'})[t] + ')">' + ico + '</span><span class="nm">' + TYPES[t].label + '</span>' + ctl + '</div>';
+    return '<div class="trow' + (off ? ' off' : '') + '" data-t="' + t + '" role="button" tabindex="0"><span class="ico" style="--c:var(' + ({lyrics:'--lyr',stories:'--sto',chords:'--chd',recipes:'--rec',notes:'--nts',places:'--plc',activities:'--act'})[t] + ')">' + ico + '</span><span class="nm">' + TYPES[t].label + '</span>' + ctl + '</div>';
   }).join('');
 }
 function goSection(t){ S.type = t; ls.set('type', t); render(); window.scrollTo({top:0}) }
@@ -972,7 +1275,7 @@ async function initStore(){
     cloud: true,
     async save(it){
       const data = {};
-      FIELDS.forEach(k => data[k] = it[k] ?? (k==='files' ? [] : (k==='added'||k==='updated') ? Date.now() : ''));
+      FIELDS.forEach(k => data[k] = it[k] ?? (k==='files'||k==='tags' ? [] : k==='info' ? {} : k==='done' ? false : (k==='added'||k==='updated') ? Date.now() : ''));
       const fresh = {...data, owner: me().id, household: me().household || ''};   // who added it and whose binder it's in
       let rec;
       if(it.id){
@@ -1005,12 +1308,13 @@ async function initStore(){
 /* ---------- list ---------- */
 function genresFor(type){
   const m = new Map();
+  if(TAGGED.includes(type)){ S.items.filter(x=>x.type===type).forEach(x=>(x.tags||[]).forEach(g=>{ const k=String(g).toLowerCase(); if(!m.has(k)) m.set(k,g) })); return [...m.values()].sort((a,b)=>a.localeCompare(b)) }
   S.items.filter(x=>x.type===type && x.genre).forEach(x=>{ const g=x.genre.trim(), k=g.toLowerCase(); if(!m.has(k)) m.set(k,g) });
   return [...m.values()].sort((a,b)=>a.localeCompare(b));
 }
 function render(){
   document.body.dataset.type = S.open ? S.open.type : S.type;
-  $('upBtn').hidden = !assets || HBT.includes(S.type);   // bulk upload is for clippings; recipes and notes add files in Edit
+  $('upBtn').hidden = !assets || HBT.includes(S.type) || TAGGED.includes(S.type);   // bulk upload is for clippings; recipes and notes add files in Edit
   for(const t in TYPES){
     $('tab-'+t).setAttribute('aria-selected', String(t===S.type));
     $('n-'+t).textContent = S.items.filter(x=>x.type===t).length;
@@ -1028,17 +1332,20 @@ function render(){
   });
   const q = S.q.trim().toLowerCase();
   let rows = S.items.filter(x => x.type===S.type
-    && (g==='All' || (x.genre||'').toLowerCase()===g.toLowerCase())
-    && (!q || ((x.title||'')+' '+(x.by||'')+' '+(x.genre||'')+(x.type==='notes' ? ' '+(x.tags||[]).join(' ')+' '+(x.body||'') : '')).toLowerCase().includes(q)));
+    && (g==='All' || (TAGGED.includes(x.type) ? (x.tags||[]).some(t=>String(t).toLowerCase()===g.toLowerCase()) : (x.genre||'').toLowerCase()===g.toLowerCase()))
+    && (!q || ((x.title||'')+' '+(x.by||'')+' '+(x.genre||'')+(x.type==='notes'||TAGGED.includes(x.type) ? ' '+(x.tags||[]).join(' ')+' '+(x.body||'')+' '+((x.info&&(x.info.address||x.info.where))||'') : '')).toLowerCase().includes(q)));
   const nm = s => (s||'').toLowerCase();
   if(S.sort==='az') rows.sort((a,b)=>nm(a.title).localeCompare(nm(b.title)));
   else if(S.sort==='by') rows.sort((a,b)=>nm(a.by).localeCompare(nm(b.by)) || nm(a.title).localeCompare(nm(b.title)));
   else rows.sort((a,b)=>(b.added||0)-(a.added||0));
+  if(S.type==='activities') rows.sort((a,b)=>(!!a.done)-(!!b.done));   // still to do first, done at the bottom
   $('secCount').textContent = rows.length;
 
   const list = $('list'); list.textContent='';
+  let doneHead = false;
   rows.forEach(it => {
     const li = document.createElement('li');
+    if(it.type==='activities' && it.done && !doneHead){ doneHead = true; const h = document.createElement('li'); h.className = 'grp'; h.textContent = 'Done'; list.appendChild(h) }
     const b = document.createElement('button'); b.className='item';
     const main = document.createElement('span'); main.className='main';
     const n = document.createElement('span'); n.className='name'; n.textContent = it.title || 'Untitled';
@@ -1046,6 +1353,13 @@ function render(){
     main.append(n); b.appendChild(main);   // list shows the title only: no artist, file note or text preview
     if(it.genre){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.genre; b.appendChild(m) }
     b.onclick = () => openReader(it);
+    if(it.type==='activities'){
+      li.className = 'act' + (it.done ? ' done' : '');
+      const ck = document.createElement('button'); ck.type = 'button'; ck.className = 'ckb'; ck.innerHTML = TICK;
+      ck.setAttribute('aria-label', (it.done ? 'Not done yet: ' : 'Done: ') + (it.title || 'activity'));
+      ck.onclick = () => toggleDone(it);
+      li.appendChild(ck);
+    }
     li.appendChild(b); list.appendChild(li);
   });
   const empty = $('empty');
@@ -1053,6 +1367,8 @@ function render(){
   if(!rows.length){
     empty.innerHTML = !S.ready ? '<b>Opening your binder…</b>'
       : (q || g!=='All') ? '<b>Nothing matches</b>Try another search or tap All.'
+      : S.type === 'places' ? '<b>No places yet</b>In Google Maps, tap Share → Copy link, then tap + here and paste it. Or share a restaurant’s or park’s page to Add to Binder.'
+      : S.type === 'activities' ? '<b>No activities yet</b>Share a page you found to Add to Binder, or tap + to jot an idea. Tick them off as you do them.'
       : S.type === 'notes' ? '<b>No notes yet</b>Tap + to write one. Your household shares them, as on Home Board.'
       : S.type === 'recipes' ? '<b>No recipes yet</b>Tap + to add one, or share a recipe page to Add to Binder.'
       : '<b>No '+TYPES[S.type].label.toLowerCase()+' yet</b>Tap + and paste a page. It lands here, formatted for reading.';
@@ -1143,7 +1459,8 @@ function paintReader(){
   $('rTitle').textContent = it.title || 'Untitled';
   const meta = $('rMeta'); meta.textContent='';
   if(it.by) meta.appendChild(tag(it.by, 'sectag'));
-  if(it.genre) meta.appendChild(tag(it.genre));
+  if(it.genre && !TAGGED.includes(it.type)) meta.appendChild(tag(it.genre));
+  if(TAGGED.includes(it.type)) (it.tags || []).forEach(t => meta.appendChild(tag(t)));
   if(HBT.includes(it.type)) (it.tags || []).slice(1).forEach(t => meta.appendChild(tag(t)));
   if(it.example) meta.appendChild(tag('Example'));
   if(it.src && /^https?:\/\//i.test(it.src)){
@@ -1162,6 +1479,8 @@ function paintBody(){
   body.className = 'rbody ' + it.type; body.textContent = '';
   if(it.type === 'recipes'){ paintRecipe(it, body); return }
   if(it.type === 'notes'){ paintNote(it, body); return }
+  if(it.type === 'places'){ paintPlace(it, body); return }
+  if(it.type === 'activities'){ paintActivity(it, body); return }
   const text = (it.body||'').replace(/\r\n?/g,'\n');
   if(it.type==='stories'){
     let paras = text.split(/\n\s*\n/);
@@ -1294,6 +1613,7 @@ function prefillRecipe(r){
 }
 function prefillFromClip(q){
   const x = q.get('x') || '', t = (q.get('t') || '').trim(), u = (q.get('u') || '').trim();
+  if(!x.trim() && isMapsLink(u)){ S.typeTouched = true; setEdType('places'); $('fMaps').value = u; lookUpMaps(true); return }   // a map link shared on its own
   let body = tidy(x).out;
   const st = t ? splitTitle(t) : null;
   if(st){
@@ -1322,17 +1642,23 @@ function guessMeta(txt){
 }
 function setEdType(t){
   S.edType = t;
-  const rec = t === 'recipes', note = t === 'notes';
-  $('recBox').hidden = !rec; $('bodyField').hidden = rec; $('actsRow').hidden = $('byField').hidden = rec || note;
-  $('bodyLbl').textContent = note ? 'Note' : 'Paste the page';
-  $('fBody').placeholder = note ? 'Write anything. Start a line with - for a bullet, [ ] for a checkbox, # for a heading.' : 'Long-press here and tap Paste. Copy the whole page if you like; Tidy strips the clutter.';
+  const rec = t === 'recipes', note = t === 'notes', place = t === 'places', act = t === 'activities', tagged = place || act;
+  $('recBox').hidden = !rec; $('bodyField').hidden = rec; $('actsRow').hidden = $('byField').hidden = rec || note || tagged;
+  $('placeBox').hidden = !place; $('actBox').hidden = !act; $('tagsBox').hidden = !tagged; $('fGenre').closest('label').hidden = tagged;
+  $('bodyLbl').textContent = note ? 'Note' : place ? 'Notes' : act ? 'Details' : 'Paste the page';
+  $('fBody').placeholder = note ? 'Write anything. Start a line with - for a bullet, [ ] for a checkbox, # for a heading.'
+    : place ? 'What to order, where to park, what the girls liked…' : act ? 'What it is, what to bring, costs… Start lines with [ ] for a checklist.'
+    : 'Long-press here and tap Paste. Copy the whole page if you like; Tidy strips the clutter.';
   $('fGenreLbl').textContent = rec || note ? 'Tag' : 'Genre';
-  $('attachHead').textContent = rec ? 'Photo' : note ? 'Photos & files' : 'Sheet music & photos';
+  $('fSrcLbl').textContent = place ? 'Website' : act ? 'Link' : 'Source link';
+  $('attachHead').textContent = rec ? 'Photo' : note || tagged ? 'Photos & files' : 'Sheet music & photos';
+  if(tagged) paintTagSugg();
   for(const k in TYPES) $('tp-'+k).setAttribute('aria-pressed', String(k===t));
   $('fByLbl').textContent = TYPES[t].who;
   document.body.dataset.type = t;
   const dl = $('genreList'); dl.textContent='';
   genresFor(t).forEach(g=>{ const o=document.createElement('option'); o.value=g; dl.appendChild(o) });
+  applyClipMeta();
 }
 function openEditor(it, quiet){
   S.editing = it || null; S.typeTouched = !!it;
@@ -1345,11 +1671,16 @@ function openEditor(it, quiet){
   $('tidyNote').textContent = '';
   S.edFiles = it && it.files ? it.files.map(f=>({...f})) : []; S.edNew = [];
   $('fIng').value = it ? it.ingredients || '' : ''; $('fSteps').value = it ? it.steps || '' : ''; $('fNote').value = it ? it.note || '' : '';
+  const inf = (it && it.info) || {}; S.edInfo = {...inf}; S.clipMeta = null;
+  $('fMaps').value = inf.maps || ''; $('fAddr').value = inf.address || ''; $('fPhone').value = inf.phone || ''; $('fHours').value = inf.hours || '';
+  $('fWhen').value = /^\d{4}-\d{2}-\d{2}/.test(inf.when || '') ? inf.when.slice(0, 10) : ''; $('fWhere').value = inf.where || '';
+  $('fTags').value = it && Array.isArray(it.tags) ? it.tags.join(', ') : '';
   // a recipe or note stays one (it lives in Home Board's list); a clipping can't become one
   const inHB = !!(it && HBT.includes(it.type)), house = !!(me() && me().household);
-  CLIP_TYPES.forEach(k => { $('tp-'+k).hidden = inHB });
+  BTYPES.forEach(k => { $('tp-'+k).hidden = inHB });
   HBT.forEach(k => { $('tp-'+k).hidden = !house || !!(it && it.type !== k) });
-  $('typePick').style.gridTemplateColumns = 'repeat(' + [...$('typePick').children].filter(b => !b.hidden).length + ',minmax(0,1fr))';
+  const nPick = [...$('typePick').children].filter(b => !b.hidden).length;
+  $('typePick').style.gridTemplateColumns = 'repeat(' + (nPick > 4 ? Math.ceil(nPick / 2) : nPick) + ',minmax(0,1fr))';
   paintEdFiles();
   setEdType(it ? it.type : S.type);
   $('editor').hidden = false;
@@ -1654,7 +1985,7 @@ function bookmarkCode(){
   const body = $('clipSrc').textContent.replace('https://binder.jermins.com/', B).replace('__CLIP_KEY__', S.clipKey);
   const wrap = "(function(){var B=" + JSON.stringify(B) + ";"
     + "var BOOKMARK=function(c){var f=document.createElement('form');f.method='POST';f.action=B+'api/binder/clip-form';f.target='_blank';f.acceptCharset='utf-8';f.style.display='none';"
-    + "var add=function(n,v){var i=document.createElement('textarea');i.name=n;i.value=v;f.appendChild(i)};add('key',KEY);add('k',c.k);add('t',c.t);add('u',c.u);add('x',c.x);"
+    + "var add=function(n,v){var i=document.createElement('textarea');i.name=n;i.value=v;f.appendChild(i)};add('key',KEY);add('k',c.k);add('t',c.t);add('u',c.u);add('x',c.x);add('d',c.d||'');add('img',c.img||'');"
     + "(document.body||document.documentElement).appendChild(f);f.submit();setTimeout(function(){f.remove()},1000)},completion=function(){};\n" + body + "\n})();";
   return 'javascript:' + encodeURIComponent(wrap);
 }
@@ -1683,17 +2014,24 @@ $('tidyBtn').onclick = () => { const r = tidy($('fBody').value); $('fBody').valu
 $('guessBtn').onclick = () => { if(!autoFill()) $('tidyNote').textContent = 'No title on the first line. Type it in.' };
 $('form').addEventListener('submit', async e => {
   e.preventDefault();
-  const title = $('fTitle').value.trim(), isRec = S.edType === 'recipes', isNote = S.edType === 'notes';
-  const body = isRec ? '' : isNote ? $('fBody').value.replace(/\s+$/, '') : tidy($('fBody').value).out;
+  const title = $('fTitle').value.trim(), isRec = S.edType === 'recipes', isNote = S.edType === 'notes', tagged = TAGGED.includes(S.edType);
+  const body = isRec ? '' : isNote || tagged ? $('fBody').value.replace(/\s+$/, '') : tidy($('fBody').value).out;
   if(S.edFiles.some(f=>f.pending)){ toast('Wait for uploads to finish'); return }
   const files = S.edFiles.filter(f=>!f.err).map(({id,type,name,size,path})=>(path ? {id,type,name,size,path} : {id,type,name,size}));
   if(isRec){ if(!$('fIng').value.trim() && !$('fSteps').value.trim()){ $('fIng').focus(); toast('Add ingredients or steps first'); return } }
-  else if(!isNote && !body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
+  else if(!isNote && !tagged && !body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
   if(!title){ $('fTitle').focus(); toast('Add a title first'); return }
   const prev = S.editing;
   const it = { ...(prev||{}), type:S.edType, title, by:$('fBy').value.trim(), genre:$('fGenre').value.trim(),
     src:$('fSrc').value.trim(), body, files, added: prev?.added || Date.now(), updated: Date.now() };
   if(isRec) Object.assign(it, { by: '', ingredients: $('fIng').value, steps: $('fSteps').value, note: $('fNote').value });
+  if(tagged){
+    const tags = splitTags($('fTags').value), v = id => $(id).value.trim();
+    const info = S.edType === 'places'
+      ? {...S.edInfo, address: v('fAddr'), phone: v('fPhone'), hours: v('fHours'), maps: v('fMaps')}
+      : {...S.edInfo, when: !v('fWhen') ? '' : String(S.edInfo.when || '').startsWith(v('fWhen')) ? S.edInfo.when : v('fWhen'), where: v('fWhere')};   // keeps an event's start time unless the date changed
+    Object.assign(it, { by: '', tags, genre: tags[0] || '', info, done: !!(prev && prev.done) });
+  }
   if(prev && prev.example) delete it.example;
   $('edSave').disabled = true;
   try{
@@ -1786,7 +2124,10 @@ async function loadClip(){
       const x = ['Ingredients', ...(rec.ingredients || []), '', 'Steps', ...(rec.steps || []).map(l => l.replace(/^—\s*(.+?)\s*—$/, '$1:'))].join('\n');
       prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x}));
     }
-    else prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: r.x || ''}));
+    else if(r.k === 'place') prefillPlace(r);
+    else if(r.k === 'event') prefillEvent(r);
+    else { if(TAGGED.includes(S.edType)) S.typeTouched = true;   // shared while on Places or Activities: keep it there
+      prefillFromClip(new URLSearchParams({t: r.t || '', u: r.u || '', x: r.x || ''})); S.clipMeta = {d: r.d || '', img: r.img || '', text: $('fBody').value}; applyClipMeta() }
     pb.collection('clip_inbox').delete(id).catch(() => {});
   }catch{ $('tidyNote').textContent = 'Couldn’t load that clipping. Share the page again, or paste the text.' }
 }
