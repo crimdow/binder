@@ -516,6 +516,14 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
         <li>In the binder, go to <b>Places</b>, tap <b>+</b> and paste the link. The name, address and map spot fill in; add your tags and Save.</li>
         <li>On a laptop or in Safari, <b>Add to Binder</b> works on a Google Maps place page or a restaurant’s, park’s or museum’s own page too.</li>
       </ol>
+      <p style="margin:10px 0 4px;font-weight:700">One tap from the Maps or Google app (optional second shortcut)</p>
+      <ol>
+        <li>In Shortcuts, tap <b>+</b>, name it <b>Add Place to Binder</b>, tap <b>ⓘ</b> and turn on <b>Show in Share Sheet</b>. In the top block, keep only <b>URLs</b> and <b>Text</b>.</li>
+        <li>Add <code>URL Encode</code> (it picks up the Shortcut Input).</li>
+        <li>Add <code>Text</code> and type <code>https://binder.jermins.com/#add&amp;u=</code>, then tap <b>URL Encoded Text</b> above the keyboard to put it at the end.</li>
+        <li>Add <code>Open URLs</code>.</li>
+        <li>In Google Maps or a Google listing: Share → <b>Add Place to Binder</b>. Binder opens in Places with it looked up.</li>
+      </ol>
     </div>
     <h3>Share shortcut (iPhone)</h3>
     <div class="help" style="margin-top:0">
@@ -1096,7 +1104,7 @@ function attachPhoto(url){
     Object.assign(row, up, {pending: false}); FILEURL[up.id] = up.path; S.edNew.push(up.id); paintEdFiles();
   }).catch(() => { S.edFiles = S.edFiles.filter(f => f !== row); paintEdFiles() });
 }
-const isMapsLink = u => /^https:\/\/((www\.|maps\.)?google\.[a-z.]+\/maps|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps|maps\.apple\.com|maps\.apple\/)/i.test(u || '');
+const isMapsLink = u => /^https:\/\/((www\.|maps\.)?google\.[a-z.]+\/(maps|search)|maps\.google\.[a-z.]+|maps\.app\.goo\.gl|goo\.gl\/maps|share\.google\/|g\.co\/kgs|maps\.apple\.com|maps\.apple\/)/i.test(u || '');
 function fillPlace(r){
   if(r.name && !$('fTitle').value.trim()) $('fTitle').value = r.name;
   if(r.address && !$('fAddr').value.trim()) $('fAddr').value = r.address;
@@ -1612,8 +1620,10 @@ function prefillRecipe(r){
   }
 }
 function prefillFromClip(q){
-  const x = q.get('x') || '', t = (q.get('t') || '').trim(), u = (q.get('u') || '').trim();
-  if(!x.trim() && isMapsLink(u)){ S.typeTouched = true; setEdType('places'); $('fMaps').value = u; lookUpMaps(true); return }   // a map link shared on its own
+  const x = q.get('x') || '';
+  let t = (q.get('t') || '').trim(), u = (q.get('u') || '').trim();
+  if(u && !/^https?:\/\//i.test(u)){ const m = u.match(/https?:\/\/\S+/); if(m){ if(!t) t = u.slice(0, m.index).replace(/\s+/g, ' ').trim(); u = m[0] } }   // "Name\nhttps://…" shared as text
+  if(!x.trim() && isMapsLink(u)){ S.typeTouched = true; setEdType('places'); if(t) $('fTitle').value = t; $('fMaps').value = u; lookUpMaps(true); return }   // a map link shared on its own
   let body = tidy(x).out;
   const st = t ? splitTitle(t) : null;
   if(st){
