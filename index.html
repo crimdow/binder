@@ -95,6 +95,16 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 
 /* list */
 .dlist{list-style:none;margin:0;padding:0}
+/* swipe a row left to delete, like Home Board */
+#list li.sw{position:relative;overflow:hidden}
+#list li.sw .swin{position:relative;background:var(--bg);transition:transform .2s ease;touch-action:pan-y}
+#list li.sw.act .swin{display:flex;align-items:center;gap:12px}
+#list li.sw.act .swin .item{flex:1;min-width:0}
+#list li.sw.dragging .swin{transition:none}
+#list li.sw .delbg{position:absolute;top:0;right:0;bottom:0;width:88px;border:0;padding:0;background:var(--ash);color:#fff;font:inherit;font-size:15px;font-weight:700;cursor:pointer;visibility:hidden}
+#list li.sw.dragging .delbg,#list li.sw.open .delbg{visibility:visible}
+/* swipe the open page right to go back */
+.reader.sliding{transition:transform .22s ease}
 .item{display:flex;align-items:center;gap:10px;width:100%;min-height:62px;padding:8px 0;border:0;border-bottom:.5px solid var(--hair);background:none;text-align:left}
 .item .main{flex:1;min-width:0}
 .item .name{display:block;font-size:17px;font-weight:650;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -129,7 +139,7 @@ h1 .count{color:var(--muted);font-size:14px;font-weight:600;margin-left:8px;lett
 body[data-type="notes"] #fBody,body[data-type="places"] #fBody,body[data-type="activities"] #fBody{font-family:var(--f-ui);font-size:16px;line-height:1.45;white-space:pre-wrap;min-height:130px}
 .rbody .pacts > a{color:var(--ink)!important}
 .rbody .pacts > .main,.rbody .pacts > .did{color:#fff!important}
-#list li.act{display:flex;align-items:center;gap:12px}
+#list li.act:not(.sw){display:flex;align-items:center;gap:12px}
 #list li.act .item{flex:1;min-width:0}
 .ckb{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid var(--muted);background:none;display:grid;place-items:center;padding:0;color:transparent;transition:background-color .15s,border-color .15s,transform .12s}
 .ckb svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
@@ -1381,7 +1391,10 @@ function render(){
       ck.onclick = () => toggleDone(it);
       li.appendChild(ck);
     }
-    li.appendChild(b); list.appendChild(li);
+    const inner = document.createElement('div'); inner.className = 'swin';
+    while(li.firstChild) inner.appendChild(li.firstChild);
+    inner.appendChild(b);
+    li.classList.add('sw'); li.append(swipeDel(li, inner, it), inner); list.appendChild(li);
   });
   const empty = $('empty');
   empty.hidden = rows.length>0;
@@ -1439,6 +1452,68 @@ const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','
 function chordSpans(line){
   return esc(line).replace(/(\[)?([A-G][^\s\]]*)(\])?/g, (all,a,c,b) => isChord(c) ? (a||'')+'<span class="ch">'+c+'</span>'+(b||'') : all);
 }
+
+/* ---------- swipe a row left to delete (with Undo) ---------- */
+let openRow = null;
+function closeRow(){ if(!openRow) return; const r = openRow; openRow = null; r.querySelector('.swin').style.transform = ''; setTimeout(() => { if(openRow !== r) r.classList.remove('open') }, 220) }
+async function swipeRemove(it){
+  try{ await store.remove(it.id); showUndo(it) }
+  catch{ toast('Couldn’t delete. Try again.'); render() }
+}
+function swipeDel(li, inner, it){
+  const bg = document.createElement('button'); bg.type = 'button'; bg.className = 'delbg'; bg.textContent = 'Delete';
+  bg.onclick = () => { openRow = null; swipeRemove(it) };
+  const W = 88; let x0 = 0, y0 = 0, dx = 0, mode = '', base = 0;
+  inner.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; mode = ''; base = openRow === li ? -W : 0 }, {passive: true});
+  inner.addEventListener('touchmove', e => {
+    const mx = e.touches[0].clientX - x0, my = e.touches[0].clientY - y0;
+    if(!mode){ if(Math.abs(mx) > 8 && Math.abs(mx) > Math.abs(my)) mode = 'x'; else if(Math.abs(my) > 8) mode = 'y' }
+    if(mode !== 'x') return;
+    e.preventDefault();
+    if(openRow && openRow !== li) closeRow();
+    dx = Math.min(0, base + mx); li.classList.add('dragging');
+    inner.style.transform = 'translateX(' + Math.max(dx, -inner.offsetWidth) + 'px)';
+  }, {passive: false});
+  inner.addEventListener('touchend', () => {
+    li.classList.remove('dragging');
+    if(mode !== 'x') return;
+    if(dx < -inner.offsetWidth * 0.6){ li.classList.add('open'); inner.style.transform = 'translateX(-100%)'; openRow = null; setTimeout(() => swipeRemove(it), 180) }
+    else if(dx < -44){ inner.style.transform = 'translateX(-' + W + 'px)'; openRow = li; li.classList.add('open') }
+    else { inner.style.transform = ''; if(openRow === li) openRow = null; setTimeout(() => { if(openRow !== li) li.classList.remove('open') }, 220) }
+  });
+  // a tap on a row that's swiped open just closes it
+  inner.addEventListener('click', e => { if(openRow === li){ e.stopPropagation(); e.preventDefault(); closeRow() } }, true);
+  return bg;
+}
+document.addEventListener('touchstart', e => { if(openRow && !openRow.contains(e.target)) closeRow() }, {passive: true});
+
+/* ---------- swipe the open page to the right to go back to the list ---------- */
+(function(){
+  const rd = $('reader'); let x0 = 0, y0 = 0, dx = 0, mode = '', t0 = 0;
+  // leave sideways swipes alone where something scrolls sideways (wide tabs, photo strip) and isn't at its left edge
+  const sideScroller = el => { for(let n = el; n && n !== rd; n = n.parentElement){ if(n.scrollWidth > n.clientWidth + 2 && n.scrollLeft > 0 && /auto|scroll/.test(getComputedStyle(n).overflowX)) return true } return false };
+  rd.addEventListener('touchstart', e => {
+    mode = ''; dx = 0;
+    if(e.touches.length !== 1 || e.target.closest('input,textarea,select,.rtools,.pages') || sideScroller(e.target)){ mode = 'off'; return }
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
+  }, {passive: true});
+  rd.addEventListener('touchmove', e => {
+    if(mode === 'off' || mode === 'y') return;
+    const mx = e.touches[0].clientX - x0, my = e.touches[0].clientY - y0;
+    if(!mode){ if(mx > 10 && mx > Math.abs(my) * 1.4) mode = 'x'; else if(Math.abs(my) > 10 || mx < -10) { mode = 'y'; return } else return }
+    e.preventDefault();
+    dx = Math.max(0, mx); rd.style.transform = 'translateX(' + dx + 'px)';
+  }, {passive: false});
+  rd.addEventListener('touchend', () => {
+    if(mode !== 'x') return;
+    const fast = dx > 60 && Date.now() - t0 < 300;
+    rd.classList.add('sliding');
+    if(dx > rd.clientWidth * 0.33 || fast){
+      rd.style.transform = 'translateX(100%)';
+      setTimeout(() => { rd.classList.remove('sliding'); rd.style.transform = ''; closeReader() }, 220);
+    } else { rd.style.transform = ''; setTimeout(() => rd.classList.remove('sliding'), 230) }
+  });
+})();
 
 /* ---------- reader ---------- */
 let wakeLock = null;
@@ -2125,11 +2200,11 @@ document.addEventListener('keydown', e => {
   if(!$('editor').hidden) closeEditor(); else if(!$('upSheet').hidden) closeUpSheet(); else if(!$('more').hidden) closeMore(); else if(S.open) closeReader();
 });
 
-/* swipe the list to flip sections */
+/* swipe the list to flip sections (anywhere but on a row: rows swipe left to delete) */
 let sx=0, sy=0;
 document.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY }, {passive:true});
 document.addEventListener('touchend', e => {
-  if(S.open || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || e.target.closest('.dtags,.bottom')) return;
+  if(S.open || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || e.target.closest('.dtags,.bottom,#list li.sw')) return;   // rows swipe to delete instead
   const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
   if(Math.abs(dx) < 60 || Math.abs(dy) > 45) return;
   const order = shownTabs(), i = order.indexOf(S.type);
