@@ -519,7 +519,8 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <p style="margin:10px 0 4px;font-weight:700">One tap from the Maps or Google app (optional second shortcut)</p>
       <ol>
         <li>In Shortcuts, tap <b>+</b>, name it <b>Add Place to Binder</b>, tap <b>ⓘ</b> and turn on <b>Show in Share Sheet</b>. In the top block, keep only <b>URLs</b> and <b>Text</b>.</li>
-        <li>Add <code>URL Encode</code> (it picks up the Shortcut Input).</li>
+        <li>Add <code>Text</code> and put <b>Shortcut Input</b> in it. (Google Maps shares the name, address and link together; this keeps all three.) Don’t add Run JavaScript here.</li>
+        <li>Add <code>URL Encode</code> (it picks up that Text).</li>
         <li>Add <code>Text</code> and type <code>https://binder.jermins.com/#add&amp;u=</code>, then tap <b>URL Encoded Text</b> above the keyboard to put it at the end.</li>
         <li>Add <code>Open URLs</code>.</li>
         <li>In Google Maps or a Google listing: Share → <b>Add Place to Binder</b>. Binder opens in Places with it looked up.</li>
@@ -1127,7 +1128,7 @@ async function lookUpMaps(quiet){
   if(!isMapsLink(u)){ if(!quiet) $('tidyNote').textContent = 'That doesn’t look like a Google Maps or Apple Maps link.'; return }
   $('tidyNote').textContent = 'Looking that up…'; $('mapsGo').disabled = true;
   try{ const r = await pb.send('/api/binder/place-link', {method: 'POST', body: {url: u}}); fillPlace(r); $('tidyNote').textContent = 'Filled in from Google Maps. Check it, then Save.' }
-  catch(e){ $('tidyNote').textContent = e?.response?.message || e?.data?.message || 'Couldn’t read that link. Fill in the details by hand.' }
+  catch(e){ $('tidyNote').textContent = $('fTitle').value.trim() ? 'Google didn’t send more details, so add anything missing by hand. Check it, then Save.' : (e?.response?.message || e?.data?.message || 'Couldn’t read that link. Fill in the details by hand.') }
   finally{ $('mapsGo').disabled = false }
 }
 $('mapsGo').onclick = () => lookUpMaps(false);
@@ -1634,8 +1635,12 @@ function prefillRecipe(r){
 function prefillFromClip(q){
   const x = q.get('x') || '';
   let t = (q.get('t') || '').trim(), u = (q.get('u') || '').trim();
-  if(u && !/^https?:\/\//i.test(u)){ const m = u.match(/https?:\/\/\S+/); if(m){ if(!t) t = u.slice(0, m.index).replace(/\s+/g, ' ').trim(); u = m[0] } }   // "Name\nhttps://…" shared as text
-  if(!x.trim() && isMapsLink(u)){ S.typeTouched = true; setEdType('places'); if(t) $('fTitle').value = t; $('fMaps').value = u; lookUpMaps(true); return }   // a map link shared on its own
+  let addr = '';
+  if(u && !/^https?:\/\//i.test(u)){ const m = u.match(/https?:\/\/\S+/); if(m){   // "Name\nAddress\nhttps://…" shared as text (Google Maps does this)
+    const lines = u.slice(0, m.index).split(/\n|\s+·\s+/).map(l => l.trim()).filter(Boolean);
+    if(!t && lines.length){ t = lines[0]; addr = lines.slice(1).join(', ') }
+    u = m[0] } }
+  if(!x.trim() && isMapsLink(u)){ S.typeTouched = true; setEdType('places'); if(t) $('fTitle').value = t; if(addr) $('fAddr').value = addr; $('fMaps').value = u; lookUpMaps(true); return }   // a map link shared on its own
   let body = tidy(x).out;
   const st = t ? splitTitle(t) : null;
   if(st){
