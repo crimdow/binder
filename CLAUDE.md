@@ -1,6 +1,6 @@
 # Pocket Binder (binder.jermins.com) — notes for Claude
 
-The family binder of saved things. It is one file, `index.html`, with no build step, served by Caddy. Data and login come from PocketBase on bkweb. The server code lives in the **home-board** repo: `server/pb_hooks/binder.pb.js` and the `server/pb_migrations/179160…` to `179190…` files.
+The family binder of saved things. It is one file, `index.html`, with no build step, served by Caddy. Data and login come from PocketBase on bkweb. The server code lives in the **home-board** repo: `server/pb_hooks/binder.pb.js` and the `server/pb_migrations/179160…` to `179190…` and `1792100000_binder_bins.js` files.
 
 ## Never
 - Put passwords or secret keys in this repo. The clipper key is fetched from the `clip_keys` table at runtime.
@@ -13,6 +13,7 @@ The family binder of saved things. It is one file, `index.html`, with no build s
   - chords (shown as **Tabs**, banjo icon)
   - places
   - activities
+  - bins
 - **Recipes and Notes:** use Home Board's `recipes` and `notes` tables, with `recipeToItem`/`noteToItem` and matching save/remove helpers. Only Home Board editors can change them.
 - **Other tables:** `binder_files` holds uploaded photos and PDFs. `clip_inbox` is the share-sheet inbox (t, u, x, d = description, img = picture link) and is cleaned nightly.
 - **Login:** the Home Board login. A household shares one binder.
@@ -37,6 +38,13 @@ The family binder of saved things. It is one file, `index.html`, with no build s
   - It reads og tags, or the name, address and coordinates from `/maps/place/…` or `?q=` links.
   - On failure the note shows a bracketed diagnostic.
   - Results against real Google are only partly reliable, and Ben has accepted that.
+- **Bins** (storage bins with printed QR labels):
+  - The area (Garage wall, Attic…) is saved in `genre`, so the chips filter by area and the list groups by it. `info` holds `code`, `spot`, `items` (the contents, one string each) and `checked` (YYYY-MM-DD). `body` is the note and `files` are photos.
+  - Codes come from the area's initials plus the next number (Garage wall → GW-01, Attic → A-01). They must be unique. Changing one means printing a new label.
+  - The bin page lets you add and take out contents, and mark the bin checked, without opening Edit. Search covers the contents and shows "Has …" under a match.
+  - QR labels link to `#bin=<record id>`, which keeps working if the code or name changes. `#bin=<code>` also works. The QR maker is `qrcode.js` (qrcode-generator 1.4.4, MIT), loaded the first time it's needed.
+  - Labels print from the bin page (this bin, its area, or all) on plain Letter paper: 3.5 × 2 in, 10 a page, with dashed cut lines. Sticker sheets will be added as another entry in `LABELS`; Ben hasn't picked the brand yet.
+  - Scanning a label with the iPhone camera opens Safari, not the home-screen app, so Safari needs its own sign-in once.
 - **Zoom:** locked (viewport and gesturestart).
 
 ## Look
