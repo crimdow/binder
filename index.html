@@ -187,8 +187,8 @@ body[data-type="bins"] .rtools .ctl:has(#scBtn){display:none}
 .item.brow .name + .what{color:var(--muted);font-size:14px}
 .item.brow .what.none{color:var(--muted)}
 .item.brow .spot{padding-top:4px;font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;max-width:84px;overflow:hidden;text-overflow:ellipsis}
-.dtag.aedit{display:inline-flex;align-items:center;gap:5px;color:var(--ink)}
-.dtag.aedit svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.dtag.aedit{display:inline-grid;place-items:center;width:30px;height:30px;padding:0;border-radius:15px;color:var(--ink)}
+.dtag.aedit svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 /* bins: the form */
 #binBox h3:first-child{margin-top:0}
 .achips{display:flex;flex-wrap:wrap;gap:8px}
@@ -1731,7 +1731,7 @@ function render(){
     c.onclick = () => { S.genre[S.type]=name; render() };
     chips.appendChild(c);
   });
-  if(S.type === 'bins'){ const e = document.createElement('button'); e.className = 'dtag aedit'; e.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Edit'; e.setAttribute('aria-label', 'Edit areas'); e.onclick = openAreas; chips.appendChild(e) }
+  if(S.type === 'bins'){ const e = document.createElement('button'); e.className = 'dtag aedit'; e.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>'; e.setAttribute('aria-label', 'Edit areas'); e.title = 'Edit areas'; e.onclick = openAreas; chips.appendChild(e) }
   $('q').placeholder = S.type === 'bins' ? 'Search what’s inside, notes, codes' : 'Search titles and names';
   const q = S.q.trim().toLowerCase();
   let rows = S.items.filter(x => x.type===S.type
