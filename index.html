@@ -176,7 +176,54 @@ li.done .item .name{color:var(--muted);text-decoration:line-through}
 .bqr p{margin:0;color:var(--muted);font-size:14px;font-weight:600}
 body[data-type="bins"] .rtools .ctl:has(#scBtn){display:none}
 /* printed labels: only the label sheet shows when printing */
-#fItems{font-family:var(--f-ui);font-size:16px;line-height:1.45;min-height:130px}
+/* bins: the table list */
+#list li.bth{display:grid;grid-template-columns:64px 1fr auto;gap:10px;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);padding:12px 0 6px;border-bottom:.5px solid var(--hair)}
+#list li.grp .n{float:right;letter-spacing:0}
+.item.brow{display:grid;grid-template-columns:64px 1fr auto;align-items:start;gap:10px;min-height:0;padding:10px 0}
+.item.brow .bcode{min-width:0;width:64px;height:26px;font-size:13px;border-radius:8px}
+.item.brow .main{min-width:0;padding-top:3px}
+.item.brow .name{font-size:15px;font-weight:700;white-space:normal;line-height:1.3}
+.item.brow .what{display:block;font-size:15px;line-height:1.35;color:var(--ink);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.item.brow .name + .what{color:var(--muted);font-size:14px}
+.item.brow .what.none{color:var(--muted)}
+.item.brow .spot{padding-top:4px;font-size:14px;font-weight:700;color:var(--muted);white-space:nowrap;max-width:84px;overflow:hidden;text-overflow:ellipsis}
+.dtag.aedit{display:inline-flex;align-items:center;gap:5px;color:var(--ink)}
+.dtag.aedit svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* bins: the form */
+#binBox h3:first-child{margin-top:0}
+.achips{display:flex;flex-wrap:wrap;gap:8px}
+.achips button{border:0;border-radius:16px;padding:8px 14px;background:var(--chip);color:var(--muted);font-size:15px;font-weight:700}
+.achips button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.achips button.new{background:none;box-shadow:inset 0 0 0 2px var(--hair)}
+.anew{display:flex;gap:8px;margin-top:8px}
+.anew input{flex:1;min-width:0;border:0;border-radius:10px;background:var(--field);padding:10px 12px;font-size:16px}
+.anew button{flex:none;border:0;border-radius:10px;background:var(--bin);color:#fff;font-weight:700;padding:0 16px}
+.codecard{display:flex;align-items:center;gap:12px;background:var(--field);border-radius:14px;padding:10px 12px}
+.codecard .bcode{height:40px;min-width:72px;font-size:19px;border-radius:11px}
+.codecard div{flex:1;min-width:0;font-size:14px;font-weight:600;color:var(--muted);line-height:1.3}
+.codecard .linkbtn{flex:none}
+.eitems{list-style:none;margin:0;padding:0 12px;background:var(--field);border-radius:14px}
+.eitems:empty{display:none}
+.eitems li{display:flex;align-items:center;gap:10px;min-height:46px;border-bottom:.5px solid var(--hair);font-size:16px}
+.eitems li:last-child{border-bottom:0}
+.eitems li span{flex:1;min-width:0;overflow-wrap:anywhere}
+.eitems li button{flex:none;width:34px;height:34px;border:0;border-radius:17px;background:none;color:var(--muted);display:grid;place-items:center;padding:0}
+.eitems li button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+#binOpt .field:first-child{margin-top:0}
+body[data-type="bins"] #fTitle{font-size:16px;font-weight:500}
+/* bins: the areas sheet */
+.arow{display:flex;align-items:center;gap:10px;min-height:52px;border-bottom:.5px solid var(--hair);cursor:pointer}
+.arow .pre{flex:none;min-width:44px;height:30px;padding:0 6px;border-radius:9px;background:var(--chip);font-size:14px;font-weight:800;display:grid;place-items:center}
+.arow b{flex:1;min-width:0;font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow span.n{color:var(--muted);font-size:14px;font-weight:600;white-space:nowrap}
+.aform{display:flex;flex-direction:column;gap:8px;padding:10px 0 12px;border-bottom:.5px solid var(--hair)}
+.aform .two{display:grid;grid-template-columns:1fr 92px;gap:8px}
+.aform input{width:100%;border:0;border-radius:10px;background:var(--field);padding:10px 12px;font-size:16px}
+.aform .acts{display:flex;gap:8px;justify-content:flex-end}
+.aform .acts button{border:0;border-radius:16px;padding:8px 14px;font-weight:700;background:var(--chip);color:var(--ink)}
+.aform .acts .save{background:var(--bin);color:#fff}
+.aform .acts .del{color:var(--ash);margin-right:auto}
+.aform .acts .del:disabled{opacity:.4}
 #printArea{display:none}
 @media print{
   body > *:not(#printArea){display:none!important}
@@ -496,7 +543,7 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
       <h2 id="edTitle">Add</h2>
       <button type="submit" class="linkbtn strong" id="edSave">Save</button>
     </div>
-    <h3>Section</h3>
+    <h3 id="secHead">Section</h3>
     <div class="seg" id="typePick">
       <button type="button" data-t="lyrics" id="tp-lyrics">Lyrics</button>
       <button type="button" data-t="stories" id="tp-stories">Story</button>
@@ -543,14 +590,18 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
     </div>
     <datalist id="genreList"></datalist>
     <div id="binBox" hidden>
-      <div class="two">
-        <label class="field"><span>Area</span><input id="fArea" list="areaList" placeholder="Garage wall, Attic…" autocomplete="off"></label>
-        <label class="field"><span>Spot</span><input id="fSpot" placeholder="Row 2, Col 3 · B3" autocomplete="off"></label>
-      </div>
-      <datalist id="areaList"></datalist>
-      <label class="field"><span>Code on the label</span><input id="fCode" autocomplete="off" autocapitalize="characters" placeholder="Filled in from the area"></label>
-      <div class="hint" id="codeNote">Short and printed big, so you can spot the bin from across the room.</div>
-      <label class="field"><span>What’s inside · one per line</span><textarea id="fItems" placeholder="Christmas lights&#10;Extension cords&#10;Tree skirt"></textarea></label>
+      <h3>Area</h3>
+      <div class="achips" id="areaChips"></div>
+      <div class="anew" id="areaNewRow" hidden><input id="areaNew" placeholder="New area, e.g. Shed" autocomplete="off" enterkeyhint="done"><button type="button" id="areaNewGo">Add</button></div>
+      <h3>Code on the label</h3>
+      <div class="codecard"><span class="bcode" id="codeBadge">–</span><div id="codeNote"></div><button type="button" class="linkbtn" id="codeEdit">Change</button></div>
+      <label class="field" id="codeField" hidden><span>Code</span><input id="fCode" autocomplete="off" autocapitalize="characters" maxlength="10"></label>
+      <h3>What’s inside</h3>
+      <ul class="eitems" id="itemsEd"></ul>
+      <div class="badd"><input id="itemNew" placeholder="Put something in" autocomplete="off" enterkeyhint="done" aria-label="Put something in this bin"><button type="button" id="itemAdd">Add</button></div>
+      <h3>Optional</h3>
+      <label class="field"><span>Spot</span><input id="fSpot" placeholder="B3, Row 2, Left side…" autocomplete="off"></label>
+      <div id="binOpt"></div>
     </div>
     <div id="actBox" hidden>
       <div class="two">
@@ -1179,28 +1230,148 @@ function paintActivity(it, body){
 }
 /* ---------- bins: a storage bin, its contents and its printed QR label ---------- */
 // info: {code: 'GW-01', spot: 'B3', items: ['Christmas lights', …], checked: 'YYYY-MM-DD'}; the area is the genre
-const BIN_AREAS = ['Garage wall','Attic','Basement','Closet','Shed'];
+const BIN_AREAS = ['Garage wall','Attic'];   // offered until the family has its own list
+// The family's areas: [{name, pre}], pre being the letters on its codes (Garage wall → GW). Kept in Home Board's
+// app_settings for the household (only Home Board editors can read or change it), or on this phone without one.
+const AREAS = { list: [], rec: null, loaded: false };
+const AREA_KEY = 'binder_bin_areas';
+const initials = name => String(name || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('').replace(/[^A-Z0-9]/g, '') || 'B';
+async function loadAreas(){
+  if(!me() || !me().household){ AREAS.list = ls.get('binAreas', []); AREAS.loaded = true; return }
+  try{ const r = await pb.collection('app_settings').getFirstListItem(pb.filter('key = {:k}', {k: AREA_KEY})); AREAS.rec = r; AREAS.list = JSON.parse(r.value || '[]') }
+  catch(e){ AREAS.rec = null; if(e?.status !== 404) AREAS.list = AREAS.list || [] }
+  if(!Array.isArray(AREAS.list)) AREAS.list = [];
+  AREAS.loaded = true;
+}
+async function saveAreas(){
+  if(!me() || !me().household){ ls.set('binAreas', AREAS.list); return true }
+  const value = JSON.stringify(AREAS.list), now = new Date().toISOString();
+  try{
+    if(AREAS.rec) AREAS.rec = await pb.collection('app_settings').update(AREAS.rec.id, {value});
+    else AREAS.rec = await pb.collection('app_settings').create({key: AREA_KEY, value, created_at: now, updated_at: now});
+    return true;
+  }catch(e){ toast(e?.status === 400 || e?.status === 403 ? 'Only Home Board editors can change the areas.' : 'Couldn’t save the areas. Check your connection.'); await loadAreas(); return false }
+}
+const findArea = name => AREAS.list.find(a => a.name.toLowerCase() === String(name || '').trim().toLowerCase());
+// every area to offer: the saved list, then any area a bin already uses, then the starters if there's nothing yet
+function allAreas(){
+  const out = AREAS.list.map(a => a.name);
+  genresFor('bins').forEach(g => { if(!out.some(x => x.toLowerCase() === g.toLowerCase())) out.push(g) });
+  if(!out.length) BIN_AREAS.forEach(a => out.push(a));
+  return out;
+}
+const areaPre = name => (findArea(name) || {}).pre || initials(name);
+// before the first change, the areas on offer (starters and ones bins use) become the saved list, so none vanish
+function keepShown(){ allAreas().forEach(n => { if(!findArea(n)) AREAS.list.push({name: n, pre: initials(n)}) }) }
+async function addArea(name, pre){
+  name = String(name || '').trim().slice(0, 40); if(!name) return null;
+  const have = findArea(name); if(have) return have.name;
+  keepShown();
+  AREAS.list.push({name, pre: cleanCode(pre || initials(name)).replace(/-/g, '') || 'B'});
+  return await saveAreas() ? name : null;
+}
 const XS = '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function todayIso(){ const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') }
 function splitItems(v){ return String(v || '').split('\n').map(l => l.replace(/^\s*[-•*]\s*/, '').trim()).filter(Boolean) }
 function binText(x){ const i = x.info || {}; return [i.code, i.spot, (i.items || []).join(' '), x.body].filter(Boolean).join(' ') }
-function binHit(x, q){   // the thing inside that matched the search, with the match in bold
-  const t = ((x.info || {}).items || []).find(s => s.toLowerCase().includes(q)); if(!t || (x.title || '').toLowerCase().includes(q)) return '';
-  const k = t.toLowerCase().indexOf(q);
-  return 'Has ' + esc(t.slice(0, k)) + '<b>' + esc(t.slice(k, k + q.length)) + '</b>' + esc(t.slice(k + q.length));
+function binHit(x, q){   // where the search matched, with the match in bold: something inside, or the note
+  const bold = (t, k) => esc(t.slice(0, k)) + '<b>' + esc(t.slice(k, k + q.length)) + '</b>' + esc(t.slice(k + q.length));
+  const t = ((x.info || {}).items || []).find(s => s.toLowerCase().includes(q));
+  if(t) return 'Has ' + bold(t, t.toLowerCase().indexOf(q));
+  const body = String(x.body || '').replace(/\s+/g, ' '), k = body.toLowerCase().indexOf(q);
+  if(k < 0) return '';
+  const from = Math.max(0, k - 24), cut = body.slice(from, k + q.length + 40);
+  return 'Note: ' + (from ? '…' : '') + bold(cut, k - from);
 }
+const binContents = it => ((it.info || {}).items || []).join(', ');
+const binName = it => it.title || binContents(it) || 'Empty bin';
 function cleanCode(v){ return String(v || '').toUpperCase().replace(/[^A-Z0-9-]+/g, '').slice(0, 10) }
 function codeOrder(a, b){ return String((a.info || {}).code || '~').localeCompare(String((b.info || {}).code || '~'), undefined, {numeric: true}) }
 // the next free code for an area: Garage wall → GW-01, GW-02…; Attic → A-01
 function nextCode(area){
-  const pre = String(area || '').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('').replace(/[^A-Z0-9]/g, '') || 'B';
+  const pre = areaPre(area);
   let n = 0; S.items.forEach(x => { const m = x.type === 'bins' && cleanCode((x.info || {}).code).match(new RegExp('^' + pre + '-(\\d+)$')); if(m && x.id !== (S.editing && S.editing.id)) n = Math.max(n, +m[1]) });
   return pre + '-' + String(n + 1).padStart(2, '0');
 }
-function suggestCode(){ if(S.codeAuto) $('fCode').value = nextCode($('fArea').value) }
-function paintAreas(){
-  const dl = $('areaList'); dl.textContent = '';
-  [...new Set([...genresFor('bins'), ...BIN_AREAS])].forEach(a => { const o = document.createElement('option'); o.value = a; dl.appendChild(o) });
+// ---- the bin form: pick an area, the code follows it, list what's inside ----
+function paintBinForm(){
+  const box = $('areaChips'); box.textContent = '';
+  allAreas().forEach(a => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = a;
+    b.setAttribute('aria-pressed', String(a.toLowerCase() === String(S.edArea || '').toLowerCase()));
+    b.onclick = () => pickArea(a); box.appendChild(b);
+  });
+  const nb = document.createElement('button'); nb.type = 'button'; nb.className = 'new'; nb.textContent = '+ New area';
+  nb.onclick = () => { $('areaNewRow').hidden = false; $('areaNew').focus() }; box.appendChild(nb);
+  const prev = S.editing && S.editing.type === 'bins' ? S.editing : null, code = S.edCode || nextCode(S.edArea);
+  $('codeBadge').textContent = code;
+  const moved = prev && (prev.info || {}).code && cleanCode(code) !== cleanCode(prev.info.code);
+  $('codeNote').textContent = moved ? 'New code. Print a new label; the QR on the old one still opens this bin.'
+    : !S.edArea ? 'Pick an area and the code fills in.' : prev && !S.codeAuto ? 'Stays with this bin.' : 'Next free in ' + S.edArea + '. It moves if the bin does.';
+  const ul = $('itemsEd'); ul.textContent = '';
+  S.edItems.forEach((t, k) => {
+    const li = document.createElement('li'), sp = document.createElement('span'); sp.textContent = t;
+    const x = document.createElement('button'); x.type = 'button'; x.innerHTML = XS; x.setAttribute('aria-label', 'Take out ' + t);
+    x.onclick = () => { S.edItems.splice(k, 1); paintBinForm() };
+    li.append(sp, x); ul.appendChild(li);
+  });
+}
+function pickArea(a){
+  const prev = S.editing && S.editing.type === 'bins' ? S.editing : null;
+  S.edArea = a;
+  // the code goes with the location: a new area gets the next free code there; back to its own area, it keeps its old one
+  if(prev && (prev.genre || '').toLowerCase() === a.toLowerCase() && (prev.info || {}).code) { S.edCode = prev.info.code; S.codeAuto = false }
+  else { S.edCode = nextCode(a); S.codeAuto = true }
+  $('codeField').hidden = true; paintBinForm();
+}
+function addEdItems(){ const more = $('itemNew').value.split(/\n|,(?=\s)/).map(t => t.trim()).filter(Boolean); if(!more.length) return; S.edItems.push(...more); $('itemNew').value = ''; paintBinForm(); $('itemNew').focus() }
+// ---- Edit areas: add, rename, change code letters, remove an empty one ----
+function openAreas(){
+  const wrap = document.createElement('div'); let open = null;
+  const paint = () => {
+    wrap.textContent = '';
+    allAreas().forEach(name => {
+      const n = S.items.filter(x => x.type === 'bins' && (x.genre || '').toLowerCase() === name.toLowerCase()).length;
+      const row = document.createElement('div'); row.className = 'arow';
+      row.innerHTML = '<span class="pre"></span><b></b><span class="n"></span>';
+      row.querySelector('.pre').textContent = areaPre(name); row.querySelector('b').textContent = name;
+      row.querySelector('.n').textContent = n ? n + (n === 1 ? ' bin' : ' bins') + ' ›' : 'No bins yet ›';
+      row.onclick = () => { open = open === name ? null : name; paint() };
+      wrap.appendChild(row);
+      if(open !== name) return;
+      const f = document.createElement('div'); f.className = 'aform';
+      f.innerHTML = '<div class="two"><input aria-label="Area name"><input aria-label="Code letters" maxlength="4" autocapitalize="characters"></div>' +
+        '<div class="hint">Code letters are used for new bins here. Renaming changes the area on all its bins.</div>' +
+        '<div class="acts"><button type="button" class="del">Remove</button><button type="button" class="cancel">Cancel</button><button type="button" class="save">Save</button></div>';
+      const [nm, pre] = f.querySelectorAll('input'); nm.value = name; pre.value = areaPre(name);
+      const del = f.querySelector('.del'); del.disabled = n > 0; if(n) del.title = 'Move or delete its bins first';
+      f.querySelector('.cancel').onclick = () => { open = null; paint() };
+      del.onclick = async () => { keepShown(); AREAS.list = AREAS.list.filter(a => a.name.toLowerCase() !== name.toLowerCase()); if(await saveAreas()){ open = null; paint(); render() } };
+      f.querySelector('.save').onclick = async () => {
+        const to = nm.value.trim().slice(0, 40), letters = cleanCode(pre.value).replace(/-/g, '') || initials(to);
+        if(!to) return;
+        if(to.toLowerCase() !== name.toLowerCase() && findArea(to)){ toast(to + ' is already an area.'); return }
+        keepShown(); const a = findArea(name); a.name = to; a.pre = letters;
+        if(!await saveAreas()) return;
+        if(to !== name){
+          const move = S.items.filter(x => x.type === 'bins' && (x.genre || '').toLowerCase() === name.toLowerCase());
+          try{ for(const it of move) await store.save({...it, genre: to, updated: Date.now()}) }catch{ toast('Couldn’t rename every bin. Check your connection.') }
+          if(S.genre.bins && S.genre.bins.toLowerCase() === name.toLowerCase()) S.genre.bins = to;
+        }
+        open = null; paint(); render();
+      };
+      wrap.appendChild(f); nm.focus();
+    });
+    const add = document.createElement('div'); add.className = 'anew'; add.style.marginTop = '14px';
+    add.innerHTML = '<input placeholder="New area, e.g. Shed" autocomplete="off" enterkeyhint="done" aria-label="New area"><button type="button">Add</button>';
+    const go = async () => { const v = add.querySelector('input').value; if(await addArea(v)){ paint(); render() } };
+    add.querySelector('button').onclick = go; add.querySelector('input').onkeydown = e => { if(e.key === 'Enter'){ e.preventDefault(); go() } };
+    const note = document.createElement('div'); note.className = 'hint'; note.style.marginTop = '8px';
+    note.textContent = me() && me().household ? 'Shared with your family, like the bins.' : 'Saved on this phone.';
+    wrap.append(add, note);
+  };
+  paint();
+  openPick('Areas', wrap, 'Done', () => closePick());
 }
 async function saveBin(it, change, msg){
   const next = {...it, ...change, info: {...(it.info || {}), ...(change.info || {})}, updated: Date.now()};
@@ -1297,7 +1468,7 @@ function printLabels(bins, layout){
       lab.innerHTML = '<div class="q">' + qrSvg(binLink(it)) + '</div><div class="t"><div class="c"></div><div class="n"></div><div class="w"></div></div>';
       const c = lab.querySelector('.c'); c.textContent = i.code || '';
       if((i.code || '').length > 7) c.classList.add('longer'); else if((i.code || '').length > 4) c.classList.add('long');   // fits the label at any length
-      lab.querySelector('.n').textContent = it.title || '';
+      lab.querySelector('.n').textContent = binName(it);
       lab.querySelector('.w').textContent = [it.genre, i.spot].filter(Boolean).join(' · ');
       sheet.appendChild(lab);
     });
@@ -1526,7 +1697,7 @@ async function initStore(){
     $('status').textContent = me().household ? 'Shared with your family' : 'Synced across your devices';
     loadClipKey().catch(() => {});
     loadClip();
-    render(); openPendingBin();
+    render(); openPendingBin(); loadAreas().then(() => { if(S.type === 'bins') render() });
   }catch(e){ $('status').textContent = 'Couldn’t load your binder. Reload to try again.'; return }
   loadRecipes(); loadNotes();
   col.subscribe('*', ev => {
@@ -1560,6 +1731,8 @@ function render(){
     c.onclick = () => { S.genre[S.type]=name; render() };
     chips.appendChild(c);
   });
+  if(S.type === 'bins'){ const e = document.createElement('button'); e.className = 'dtag aedit'; e.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Edit'; e.setAttribute('aria-label', 'Edit areas'); e.onclick = openAreas; chips.appendChild(e) }
+  $('q').placeholder = S.type === 'bins' ? 'Search what’s inside, notes, codes' : 'Search titles and names';
   const q = S.q.trim().toLowerCase();
   let rows = S.items.filter(x => x.type===S.type
     && (g==='All' || (TAGGED.includes(x.type) ? (x.tags||[]).some(t=>String(t).toLowerCase()===g.toLowerCase()) : (x.genre||'').toLowerCase()===g.toLowerCase()))
@@ -1578,16 +1751,22 @@ function render(){
   rows.forEach(it => {
     const li = document.createElement('li');
     if(it.type==='activities' && it.done && !doneHead){ doneHead = true; const h = document.createElement('li'); h.className = 'grp'; h.textContent = 'Done'; list.appendChild(h) }
-    if(it.type==='bins' && g==='All' && nm(it.genre) !== area){ area = nm(it.genre); const h = document.createElement('li'); h.className = 'grp'; h.textContent = it.genre || 'No area yet'; list.appendChild(h) }
+    if(it.type==='bins' && !area && area !== ''){ const h = document.createElement('li'); h.className = 'bth'; h.innerHTML = '<span>Code</span><span>What’s inside</span><span>Spot</span>'; list.appendChild(h) }
+    if(it.type==='bins' && g==='All' && nm(it.genre) !== area){ area = nm(it.genre); const h = document.createElement('li'); h.className = 'grp'; h.textContent = it.genre || 'No area yet';
+      const c = document.createElement('span'); c.className = 'n'; c.textContent = rows.filter(x => nm(x.genre) === area).length; h.appendChild(c); list.appendChild(h) }
+    if(it.type==='bins' && area === null) area = '';
     const b = document.createElement('button'); b.className='item';
     const main = document.createElement('span'); main.className='main';
     const n = document.createElement('span'); n.className='name'; n.textContent = it.title || 'Untitled';
     if(it.example){ const e=document.createElement('span'); e.className='ex'; e.textContent='Example'; n.appendChild(e) }
     main.append(n); b.appendChild(main);   // list shows the title only: no artist, file note or text preview
-    if(it.type==='bins'){
+    if(it.type==='bins'){   // a table row: code | name (if any) and what's inside | spot
+      b.classList.add('brow'); n.remove();
       const c = document.createElement('span'); c.className = 'bcode'; c.textContent = (it.info && it.info.code) || '–'; b.prepend(c);
-      const hit = q && binHit(it, q); if(hit){ const h = document.createElement('span'); h.className = 'hit'; h.innerHTML = hit; main.appendChild(h) }   // which thing in it matched
-      if(it.info && it.info.spot){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.info.spot; b.appendChild(m) }
+      if(it.title){ const t = document.createElement('span'); t.className = 'name'; t.textContent = it.title; main.appendChild(t) }
+      const w = document.createElement('span'), what = binContents(it); w.className = 'what' + (what ? '' : ' none'); w.textContent = what || 'Nothing listed yet'; main.appendChild(w);
+      const hit = q && binHit(it, q); if(hit){ const h = document.createElement('span'); h.className = 'hit'; h.innerHTML = hit; main.appendChild(h) }   // where the search matched
+      const sp = document.createElement('span'); sp.className = 'spot'; sp.textContent = (it.info && it.info.spot) || ''; b.appendChild(sp);
     }
     else if(it.genre){ const m=document.createElement('span'); m.className='meta'; m.textContent=it.genre; b.appendChild(m) }
     b.onclick = () => openReader(it);
@@ -1760,7 +1939,7 @@ function paintReader(){
   const it = S.open; if(!it) return;
   document.body.dataset.type = it.type;
   $('rBackLbl').textContent = TYPES[it.type].label;
-  $('rTitle').textContent = it.title || 'Untitled';
+  $('rTitle').textContent = it.type === 'bins' ? it.title || 'Bin ' + ((it.info || {}).code || '') : it.title || 'Untitled';
   const meta = $('rMeta'); meta.textContent='';
   if(it.by) meta.appendChild(tag(it.by, 'sectag'));
   if(it.genre && !TAGGED.includes(it.type) && it.type !== 'bins') meta.appendChild(tag(it.genre));   // a bin's area is in its card
@@ -1957,10 +2136,13 @@ function setEdType(t){
   $('recBox').hidden = !rec; $('bodyField').hidden = rec; $('actsRow').hidden = $('byField').hidden = rec || note || tagged || bin;
   $('placeBox').hidden = !place; $('actBox').hidden = !act; $('tagsBox').hidden = !tagged; $('fGenre').closest('label').hidden = tagged || bin;
   $('binBox').hidden = !bin; $('fSrc').closest('label').hidden = bin;
-  // a bin's form reads top to bottom: name, where it is, what's in it, notes, photos
-  if(bin){ $('binBox').after($('bodyField')); $('bodyField').after($('attachBox')) } else { $('actsRow').before($('bodyField')); $('typePick').after($('attachBox')) }
-  $('fTitle').previousElementSibling.textContent = bin ? 'Bin name' : 'Title';
-  if(bin) paintAreas();
+  // a bin's form: area, code, what's inside, then the optional spot, name, notes and photos
+  const tl = $('fTitle').closest('label');
+  if(bin){ $('binOpt').append(tl, $('bodyField'), $('attachBox')) } else { $('actsRow').before($('bodyField')); $('typePick').after($('attachBox')); $('tidyNote').after(tl) }
+  $('fTitle').previousElementSibling.textContent = bin ? 'Name' : 'Title';
+  $('fTitle').required = !bin; $('fTitle').placeholder = bin ? 'Painting stuff, Christmas…' : '';
+  $('secHead').hidden = $('typePick').hidden = bin && S.binOnly;   // adding from Bins or editing a bin: no section picker
+  if(bin) paintBinForm();
   $('bodyLbl').textContent = note ? 'Note' : place || bin ? 'Notes' : act ? 'Details' : 'Paste the page';
   $('fBody').placeholder = note ? 'Write anything. Start a line with - for a bullet, [ ] for a checkbox, # for a heading.'
     : place ? 'What to order, where to park, what the girls liked…' : bin ? 'Fragile, goes back to Grandma, check every spring…' : act ? 'What it is, what to bring, costs… Start lines with [ ] for a checklist.'
@@ -1991,10 +2173,12 @@ function openEditor(it, quiet){
   $('fMaps').value = inf.maps || ''; $('fAddr').value = inf.address || ''; $('fPhone').value = inf.phone || ''; $('fHours').value = inf.hours || '';
   $('fWhen').value = /^\d{4}-\d{2}-\d{2}/.test(inf.when || '') ? inf.when.slice(0, 10) : ''; $('fWhere').value = inf.where || '';
   $('fTags').value = it && Array.isArray(it.tags) ? it.tags.join(', ') : '';
-  $('fArea').value = it && it.type === 'bins' ? it.genre || '' : S.type === 'bins' && S.genre.bins && S.genre.bins !== 'All' ? S.genre.bins : '';   // a new bin starts in the area you're looking at
-  $('fSpot').value = inf.spot || ''; $('fCode').value = inf.code || ''; $('fItems').value = (inf.items || []).join('\n');
-  S.codeAuto = !inf.code; $('codeNote').textContent = 'Short and printed big, so you can spot the bin from across the room.';
-  if(S.codeAuto) suggestCode();
+  const isBin = (it ? it.type : S.type) === 'bins'; S.binOnly = isBin;
+  S.edArea = it && it.type === 'bins' ? it.genre || '' : S.genre.bins && S.genre.bins !== 'All' ? S.genre.bins : '';   // a new bin starts in the area you're looking at
+  S.edItems = [...(inf.items || [])]; S.edCode = inf.code || ''; S.codeAuto = !inf.code;
+  if(!S.edCode && S.edArea) S.edCode = nextCode(S.edArea);
+  $('fSpot').value = inf.spot || ''; $('fCode').value = ''; $('codeField').hidden = true; $('itemNew').value = ''; $('areaNewRow').hidden = true; $('areaNew').value = '';
+  if(isBin && !AREAS.loaded) loadAreas().then(() => { if(S.edType === 'bins' && !$('editor').hidden) paintBinForm() });
   // a recipe or note stays one (it lives in Home Board's list); a clipping can't become one
   const inHB = !!(it && HBT.includes(it.type)), house = !!(me() && me().household);
   BTYPES.forEach(k => { $('tp-'+k).hidden = inHB });
@@ -2005,7 +2189,8 @@ function openEditor(it, quiet){
   setEdType(it ? it.type : S.type);
   $('editor').hidden = false;
   S.preTrim = null; $('untrimBtn').hidden = true;
-  if(!it && !quiet) setTimeout(()=>$('fBody').focus(), 60);
+  $('form').scrollTop = 0;   // always open at the top
+  if(!it && !quiet && S.edType !== 'bins') setTimeout(()=>$('fBody').focus(), 60);
 }
 function closeEditor(saved){
   if(!saved && S.edNew && S.edNew.length){ const keep = new Set(((S.editing&&S.editing.files)||[]).map(f=>f.id)); purge(S.edNew.filter(id=>!keep.has(id)).map(id=>({id}))) }
@@ -2254,7 +2439,7 @@ let tt = 0, ut = 0, undoItem = null;
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.hidden=false; clearTimeout(tt); tt=setTimeout(()=>t.hidden=true, 2400) }
 function showUndo(it){
   if(undoItem && undoItem !== it) purge(undoItem.files);
-  undoItem = it; $('undoTxt').textContent = 'Deleted “'+(it.title||'Untitled')+'”';
+  undoItem = it; $('undoTxt').textContent = 'Deleted “'+(it.type === 'bins' ? (it.info || {}).code || 'bin' : it.title||'Untitled')+'”';
   $('undo').hidden = false; clearTimeout(ut); ut = setTimeout(()=>{ $('undo').hidden = true; if(undoItem) purge(undoItem.files); undoItem = null }, 6000);
 }
 $('undoBtn').onclick = async () => {
@@ -2269,8 +2454,13 @@ $('addBtn').onclick = () => openEditor(null);
 $('edCancel').onclick = () => closeEditor();
 $('edScrim').onclick = () => closeEditor();
 for(const t in TYPES) $('tp-'+t).onclick = () => { S.typeTouched = true; setEdType(t) };
-$('fArea').addEventListener('input', suggestCode);   // a new bin's code follows its area until you type your own
-$('fCode').addEventListener('input', () => { S.codeAuto = !$('fCode').value.trim(); if(S.editing && (S.editing.info || {}).code && cleanCode($('fCode').value) !== cleanCode(S.editing.info.code)) $('codeNote').textContent = 'Changing the code means printing a new label. The QR still opens this bin.' });
+$('codeEdit').onclick = () => { $('codeField').hidden = false; $('fCode').value = $('codeBadge').textContent; $('fCode').focus(); $('fCode').select() };
+$('fCode').addEventListener('input', () => { S.edCode = cleanCode($('fCode').value); S.codeAuto = false; $('codeBadge').textContent = S.edCode || nextCode(S.edArea) });
+$('itemAdd').onclick = addEdItems;
+$('itemNew').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); addEdItems() } });
+const newArea = async () => { const a = await addArea($('areaNew').value); if(a){ $('areaNewRow').hidden = true; $('areaNew').value = ''; pickArea(a) } };
+$('areaNewGo').onclick = newArea;
+$('areaNew').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); newArea() } });
 $('fBody').addEventListener('paste', () => setTimeout(() => {
   afterPaste();
 }, 0));
@@ -2342,13 +2532,15 @@ $('form').addEventListener('submit', async e => {
   const files = S.edFiles.filter(f=>!f.err).map(({id,type,name,size,path})=>(path ? {id,type,name,size,path} : {id,type,name,size}));
   if(isRec){ if(!$('fIng').value.trim() && !$('fSteps').value.trim()){ $('fIng').focus(); toast('Add ingredients or steps first'); return } }
   else if(!isNote && !tagged && !isBin && !body && !files.length){ $('fBody').focus(); toast('Paste text or upload a file first'); return }
-  if(!title){ $('fTitle').focus(); toast(isBin ? 'Give the bin a name first' : 'Add a title first'); return }
+  if(!title && !isBin){ $('fTitle').focus(); toast('Add a title first'); return }
   const prev = S.editing;
   if(isBin){
-    const code = cleanCode($('fCode').value) || nextCode($('fArea').value);
+    if($('itemNew').value.trim()) addEdItems();   // typed something but didn't tap Add
+    const code = cleanCode(S.edCode) || nextCode(S.edArea);
     const clash = S.items.find(x => x.type === 'bins' && x.id !== (prev && prev.id) && cleanCode((x.info || {}).code) === code);
-    if(clash){ $('fCode').focus(); toast(code + ' is already on ' + (clash.title || 'another bin') + '. Pick another code.'); return }
-    $('fCode').value = code;
+    if(clash){ $('codeField').hidden = false; $('fCode').value = code; $('fCode').focus(); toast(code + ' is already on another bin (' + binName(clash) + '). Pick another code.'); return }
+    S.edCode = code;
+    if(S.edArea && !findArea(S.edArea) && AREAS.loaded) addArea(S.edArea);   // a starter area becomes one of yours once it's used
   }
   const it = { ...(prev||{}), type:S.edType, title, by:$('fBy').value.trim(), genre:$('fGenre').value.trim(),
     src:$('fSrc').value.trim(), body, files, added: prev?.added || Date.now(), updated: Date.now() };
@@ -2360,8 +2552,8 @@ $('form').addEventListener('submit', async e => {
       : {...S.edInfo, when: !v('fWhen') ? '' : String(S.edInfo.when || '').startsWith(v('fWhen')) ? S.edInfo.when : v('fWhen'), where: v('fWhere')};   // keeps an event's start time unless the date changed
     Object.assign(it, { by: '', tags, genre: tags[0] || '', info, done: !!(prev && prev.done) });
   }
-  if(isBin) Object.assign(it, { by: '', src: '', genre: $('fArea').value.trim(), tags: [],
-    info: {...S.edInfo, code: $('fCode').value, spot: $('fSpot').value.trim(), items: splitItems($('fItems').value), checked: S.edInfo.checked || todayIso()} });
+  if(isBin) Object.assign(it, { by: '', src: '', genre: S.edArea || '', tags: [],
+    info: {...S.edInfo, code: S.edCode, spot: $('fSpot').value.trim(), items: [...S.edItems], checked: S.edInfo.checked || todayIso()} });
   if(prev && prev.example) delete it.example;
   $('edSave').disabled = true;
   try{
