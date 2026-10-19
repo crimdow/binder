@@ -44,6 +44,7 @@ The family binder of saved things. It is one file, `index.html`, with no build s
   - The bin page lets you add and take out contents, and mark the bin checked, without opening Edit. Search covers the contents and shows "Has …" under a match.
   - QR labels link to `#bin=<record id>`, which keeps working if the code or name changes. `#bin=<code>` also works. The QR maker is `qrcode.js` (qrcode-generator 1.4.4, MIT), loaded the first time it's needed.
   - Labels print from the bin page (this bin, its area, or all) on plain Letter paper: 3.5 × 2 in, 10 a page, with dashed cut lines. Sticker sheets will be added as another entry in `LABELS`; Ben hasn't picked the brand yet.
+  - **NFC tags** (for later): a tag holds the same `#bin=<id>` link. **Copy NFC link** on the bin page copies it, and Ben writes it to an NTAG213/215 sticker with an app such as NFC Tools, because iPhones can't write NFC from a web page.
   - Scanning a label with the iPhone camera opens Safari, not the home-screen app, so Safari needs its own sign-in once.
 - **Zoom:** locked (viewport and gesturestart).
 

@@ -1220,7 +1220,8 @@ function paintBin(it, body){
   ok.textContent = i.checked === todayIso() ? '✓ Checked today' : 'Mark as checked';
   ok.onclick = () => saveBin(it, {info: {checked: todayIso()}}, 'Marked as checked today');
   const lab = document.createElement('button'); lab.type = 'button'; lab.textContent = 'Print label'; lab.onclick = () => pickLabels(it);
-  acts.append(ok, lab); body.appendChild(acts);
+  const nfc = document.createElement('button'); nfc.type = 'button'; nfc.textContent = 'Copy NFC link'; nfc.onclick = () => copyBinLink(it);
+  acts.append(ok, lab, nfc); body.appendChild(acts);
   // what's inside: add and remove right here, without opening Edit
   const h = document.createElement('h3'); h.textContent = 'What’s inside' + (items.length ? ' · ' + items.length : ''); body.appendChild(h);
   const ul = document.createElement('ul'); ul.className = 'blist';
@@ -1246,6 +1247,11 @@ function paintBin(it, body){
   loadQR().then(() => { box.innerHTML = qrSvg(binLink(it)) }).catch(() => { qr.remove() });
 }
 function binLink(it){ return location.origin + location.pathname + '#bin=' + encodeURIComponent(it.id) }
+// An NFC tag holds the same link as the QR label. iPhones can't write tags from a web page, so this copies it for an app like NFC Tools.
+async function copyBinLink(it){
+  try{ await navigator.clipboard.writeText(binLink(it)); toast('Link copied. In NFC Tools, write it to the tag as a URL.') }
+  catch{ toast('Couldn’t copy. Try again.') }
+}
 // a scanned label (#bin=…) opens that bin once the binder has loaded; the code works too, for typing by hand
 function openPendingBin(){
   const want = S.pendingBin; if(!want || !S.ready) return;
