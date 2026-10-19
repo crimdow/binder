@@ -197,7 +197,9 @@ body[data-type="bins"] .rtools .ctl:has(#scBtn){display:none}
 .achips button.new{background:none;box-shadow:inset 0 0 0 2px var(--hair)}
 .achips.sizes button{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:58px;padding:7px 10px;line-height:1.1}
 .achips.sizes small{font-size:11px;font-weight:600;opacity:.8}
-.anew input.gal{flex:0 0 92px}
+.anew input.gal{flex:0 0 78px}
+.anew select,.aform select{flex:0 0 70px;border:0;border-radius:10px;background:var(--field);padding:0 8px;font-size:16px;font-weight:600;color:var(--ink)}
+.aform .two.three{grid-template-columns:1fr 78px 70px}
 .anew{display:flex;gap:8px;margin-top:8px}
 .anew input{flex:1;min-width:0;border:0;border-radius:10px;background:var(--field);padding:10px 12px;font-size:16px}
 .anew button{flex:none;border:0;border-radius:10px;background:var(--bin);color:#fff;font-weight:700;padding:0 16px}
@@ -1238,9 +1240,14 @@ function paintActivity(it, body){
 // The label carries only size and number (LG-01), so a bin can move without a new label. The app shows the full
 // code with the area in front (A-LG-01), worked out from where the bin is now. Older bins have just a code (GW-01).
 const BIN_AREAS = ['Garage wall','Attic'];   // offered until the family has its own list
-const BIN_SIZES = [{key:'XS', gal:6}, {key:'SM', gal:12}, {key:'MD', gal:18}, {key:'LG', gal:27}, {key:'XL', gal:40}];
+const BIN_SIZES = [{key:'XS', vol:6, unit:'gal'}, {key:'SM', vol:12, unit:'gal'}, {key:'MD', vol:18, unit:'gal'}, {key:'LG', vol:27, unit:'gal'}, {key:'XL', vol:40, unit:'gal'}];
+// a size's volume, in gallons or liters as written on the bin (older lists saved just gal)
+const unitOf = z => z && z.unit === 'L' ? 'L' : 'gal';
+const volOf = z => z ? (z.vol != null ? z.vol : z.gal != null ? z.gal : '') : '';
+const litres = z => (+volOf(z) || 0) * (unitOf(z) === 'L' ? 1 : 3.785);
+const volText = (z, long) => volOf(z) === '' ? '' : volOf(z) + (long ? (unitOf(z) === 'L' ? ' liters' : ' gallons') : ' ' + unitOf(z));
 // The family's lists, kept in Home Board's app_settings for the household (only Home Board editors can read or
-// change them), or on this phone without one. Areas: [{name, pre}] (pre: the letters, Garage wall → GW). Sizes: [{key, gal}].
+// change them), or on this phone without one. Areas: [{name, pre}] (pre: the letters, Garage wall → GW). Sizes: [{key, vol, unit}], unit 'gal' or 'L'.
 const listStore = (key, local) => ({ key, local, list: [], rec: null });
 const AREAS = listStore('binder_bin_areas', 'binAreas'), SIZES = listStore('binder_bin_sizes', 'binSizes');
 let binListsLoaded = false;
@@ -1284,12 +1291,12 @@ async function addArea(name){
 const findSize = key => SIZES.list.find(z => z.key === letters(key));
 function allSizes(){   // smallest first
   const out = (SIZES.list.length ? SIZES.list : BIN_SIZES).map(z => ({...z}));
-  binsOf(x => (x.info || {}).size).forEach(x => { if(!out.some(z => z.key === x.info.size)) out.push({key: x.info.size, gal: ''}) });
-  return out.sort((a, b) => (+a.gal || 999) - (+b.gal || 999) || a.key.localeCompare(b.key));
+  binsOf(x => (x.info || {}).size).forEach(x => { if(!out.some(z => z.key === x.info.size)) out.push({key: x.info.size, vol: '', unit: 'gal'}) });
+  return out.sort((a, b) => (litres(a) || 1e6) - (litres(b) || 1e6) || a.key.localeCompare(b.key));   // gallons and liters compared fairly
 }
-const sizeGal = key => (allSizes().find(z => z.key === key) || {}).gal;
+const sizeVol = key => volText(allSizes().find(z => z.key === key));
 const sizeRank = key => { const i = allSizes().findIndex(z => z.key === key); return i < 0 ? 99 : i };
-function keepSizes(){ if(!SIZES.list.length) SIZES.list = allSizes().map(z => ({key: z.key, gal: z.gal})) }
+function keepSizes(){ if(!SIZES.list.length) SIZES.list = allSizes().map(z => ({key: z.key, vol: volOf(z), unit: unitOf(z)})) }
 // ---- codes ----
 const pad2 = n => String(n).padStart(2, '0');
 const labelOf = i => (i = i || {}).size ? i.size + '-' + pad2(i.num || 0) : i.code || '';        // what the label says: LG-01
@@ -1329,7 +1336,7 @@ function chipsInto(box, opts, on, pick, addLabel, onAdd){
 function paintBinForm(){
   const on = allAreas().find(a => a.toLowerCase() === String(S.edArea || '').toLowerCase());
   chipsInto($('areaChips'), allAreas().map(a => ({value: a, html: esc(a)})), on, pickArea, '+ New area', () => { $('areaNewRow').hidden = false; $('areaNew').focus() });
-  chipsInto($('sizeChips'), allSizes().map(z => ({value: z.key, html: '<b>' + esc(z.key) + '</b>' + (z.gal ? '<small>' + esc(String(z.gal)) + ' gal</small>' : '')})), S.edSize, pickSize);
+  chipsInto($('sizeChips'), allSizes().map(z => ({value: z.key, html: '<b>' + esc(z.key) + '</b>' + (volText(z) ? '<small>' + esc(volText(z)) + '</small>' : '')})), S.edSize, pickSize);
   const prev = S.editing && S.editing.type === 'bins' ? S.editing : null, pi = (prev && prev.info) || {};
   const i = S.edSize ? {size: S.edSize, num: S.edNum} : {code: S.edLegacy || ''};
   $('codeBadge').textContent = S.edSize || S.edLegacy ? fullCode(S.edArea, i) : '–';
@@ -1365,8 +1372,12 @@ function openAreas(){
   };
   const form = (inputs, hint, n, onSave, onDel) => {
     const f = document.createElement('div'); f.className = 'aform';
-    f.innerHTML = '<div class="two"></div><div class="hint"></div><div class="acts"><button type="button" class="del">Remove</button><button type="button" class="cancel">Cancel</button><button type="button" class="save">Save</button></div>';
-    const ins = inputs.map(([label, value, attrs]) => { const x = document.createElement('input'); x.setAttribute('aria-label', label); x.placeholder = label; x.value = value; Object.assign(x, attrs || {}); f.querySelector('.two').appendChild(x); return x });
+    f.innerHTML = '<div class="two' + (inputs.length > 2 ? ' three' : '') + '"></div><div class="hint"></div><div class="acts"><button type="button" class="del">Remove</button><button type="button" class="cancel">Cancel</button><button type="button" class="save">Save</button></div>';
+    const ins = inputs.map(([label, value, attrs, options]) => {
+      const x = document.createElement(options ? 'select' : 'input'); x.setAttribute('aria-label', label);
+      if(options) options.forEach(([v, t]) => x.add(new Option(t, v))); else x.placeholder = label;
+      x.value = value; Object.assign(x, attrs || {}); f.querySelector('.two').appendChild(x); return x;
+    });
     f.querySelector('.hint').textContent = hint;
     const del = f.querySelector('.del'); del.disabled = n > 0; if(n) del.title = 'Move or delete its bins first';
     f.querySelector('.cancel').onclick = () => { open = null; paint() };
@@ -1376,9 +1387,9 @@ function openAreas(){
   };
   const adder = (ph, onAdd, two) => {
     const a = document.createElement('div'); a.className = 'anew';
-    a.innerHTML = '<input autocomplete="off" enterkeyhint="done">' + (two ? '<input class="gal" inputmode="decimal" autocomplete="off" placeholder="Gallons" aria-label="Gallons">' : '') + '<button type="button">Add</button>';
-    const [i1, i2] = a.querySelectorAll('input'); i1.placeholder = ph; i1.setAttribute('aria-label', ph);
-    const go = async () => { if(await onAdd(i1.value, i2 && i2.value)){ paint(); render() } };
+    a.innerHTML = '<input autocomplete="off" enterkeyhint="done">' + (two ? '<input class="gal" inputmode="decimal" autocomplete="off" placeholder="Volume" aria-label="Volume"><select aria-label="Unit"><option value="gal">gal</option><option value="L">L</option></select>' : '') + '<button type="button">Add</button>';
+    const [i1, i2] = a.querySelectorAll('input'), u = a.querySelector('select'); i1.placeholder = ph; i1.setAttribute('aria-label', ph);
+    const go = async () => { if(await onAdd(i1.value, i2 && i2.value, u && u.value)){ paint(); render() } };
     a.querySelector('button').onclick = go; a.querySelectorAll('input').forEach(x => x.onkeydown = e => { if(e.key === 'Enter'){ e.preventDefault(); go() } });
     wrap.appendChild(a);
   };
@@ -1408,22 +1419,22 @@ function openAreas(){
     head('Sizes');
     allSizes().forEach(z => {
       const n = binsOf(x => (x.info || {}).size === z.key).length;
-      row('s:' + z.key, z.key, z.gal ? z.gal + ' gallons' : 'Set the gallons', n);
+      row('s:' + z.key, z.key, volText(z, true) || 'Set the volume', n);
       if(open !== 's:' + z.key) return;
-      form([['Size letters', z.key, {maxLength: 4, autocapitalize: 'characters', disabled: n > 0}], ['Gallons', z.gal || '', {inputMode: 'decimal'}]],
-        n ? 'Its letters are on ' + n + (n === 1 ? ' label' : ' labels') + ', so only the gallons can change.' : 'Bins get codes like ' + z.key + '-01, counting up within this size.', n,
-        async (key, gal) => {
-          key = letters(key) || z.key; gal = parseFloat(gal) || '';
+      form([['Size letters', z.key, {maxLength: 4, autocapitalize: 'characters', disabled: n > 0}], ['Volume', volOf(z), {inputMode: 'decimal'}], ['Unit', unitOf(z), {}, [['gal', 'gal'], ['L', 'L']]]],
+        n ? 'Its letters are on ' + n + (n === 1 ? ' label' : ' labels') + ', so only the volume can change.' : 'Bins get codes like ' + z.key + '-01, counting up within this size.', n,
+        async (key, vol, unit) => {
+          key = letters(key) || z.key; vol = parseFloat(vol) || '';
           if(key !== z.key && allSizes().some(y => y.key === key)){ toast(key + ' is already a size.'); return false }
-          keepSizes(); const s = findSize(z.key); s.key = key; s.gal = gal;
+          keepSizes(); const s = findSize(z.key); s.key = key; s.vol = vol; s.unit = unit === 'L' ? 'L' : 'gal'; delete s.gal;
           return saveList(SIZES, 'sizes');
         },
         async () => { keepSizes(); SIZES.list = SIZES.list.filter(y => y.key !== z.key); return saveList(SIZES, 'sizes') });
     });
-    adder('New size, e.g. XXL', async (key, gal) => {
+    adder('New size', async (key, vol, unit) => {
       key = letters(key); if(!key) return false;
       if(allSizes().some(y => y.key === key)){ toast(key + ' is already a size.'); return false }
-      keepSizes(); SIZES.list.push({key, gal: parseFloat(gal) || ''}); return saveList(SIZES, 'sizes');
+      keepSizes(); SIZES.list.push({key, vol: parseFloat(vol) || '', unit: unit === 'L' ? 'L' : 'gal'}); return saveList(SIZES, 'sizes');
     }, true);
     const note = document.createElement('div'); note.className = 'hint'; note.style.marginTop = '8px';
     note.textContent = me() && me().household ? 'Shared with your family, like the bins.' : 'Saved on this phone.';
@@ -1443,8 +1454,8 @@ function paintBin(it, body){
   const code = document.createElement('span'); code.className = 'bcode'; code.textContent = binCode(it);
   const where = document.createElement('div'); where.className = 'where';
   const a = document.createElement('b'); a.textContent = it.genre || 'No area yet';
-  const gal = i.size && sizeGal(i.size);
-  const sp = document.createElement('span'); sp.textContent = [i.size ? 'Label ' + labelOf(i) + (gal ? ' · ' + gal + ' gal' : '') : '', i.spot, i.checked ? 'Checked ' + new Date(i.checked + 'T12:00:00').toLocaleDateString(undefined, {month:'short', day:'numeric', year: i.checked.slice(0, 4) !== String(new Date().getFullYear()) ? 'numeric' : undefined}) : ''].filter(Boolean).join(' · ');
+  const vol = i.size && sizeVol(i.size);
+  const sp = document.createElement('span'); sp.textContent = [i.size ? 'Label ' + labelOf(i) + (vol ? ' · ' + vol : '') : '', i.spot, i.checked ? 'Checked ' + new Date(i.checked + 'T12:00:00').toLocaleDateString(undefined, {month:'short', day:'numeric', year: i.checked.slice(0, 4) !== String(new Date().getFullYear()) ? 'numeric' : undefined}) : ''].filter(Boolean).join(' · ');
   where.append(a, sp); head.append(code, where); body.appendChild(head);
   const acts = document.createElement('div'); acts.className = 'pacts';
   const ok = document.createElement('button'); ok.type = 'button'; ok.className = i.checked === todayIso() ? 'did' : 'main';
