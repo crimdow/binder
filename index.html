@@ -439,6 +439,41 @@ body[data-type="bins"] #fTitle{font-size:16px;font-weight:500}
 .signout{width:100%;border:0;border-radius:12px;background:var(--chip);color:var(--ash);font:inherit;font-size:16px;font-weight:700;padding:12px;cursor:pointer}
 .acct{color:var(--muted);font-size:14px;margin:0 4px 8px}
 html,body{touch-action:manipulation}   /* no double-tap zoom */
+
+/* ---- landscape tablet / laptop (Surface Pro and up): dividers down the left, list beside them, the open page on the right.
+   Phones never match (even sideways they're under 1000px wide); WIDE in the script watches the same query. ---- */
+.rempty{display:none}
+@media (min-width:1000px) and (orientation:landscape){
+  :root{--rail:112px;--pane:420px}
+  .wrap{max-width:none;width:var(--pane);margin:0 0 0 var(--rail);padding-block-end:calc(110px + env(safe-area-inset-bottom,0px));border-right:.5px solid var(--hair);min-height:100vh}
+  .bottom{top:0;right:auto;width:var(--rail);border-top:0;border-right:.5px solid var(--hair);padding:calc(14px + env(safe-area-inset-top,0px)) 0 calc(14px + env(safe-area-inset-bottom,0px)) 22px;overflow-y:auto;scrollbar-width:none}
+  .bottom::-webkit-scrollbar{display:none}
+  .rings{position:fixed;left:8px;top:0;bottom:0;flex-direction:column;justify-content:center;gap:140px;padding:0}
+  .dividers,.dividers.six{grid-template-columns:1fr!important;gap:8px;max-width:none}
+  .div{border-radius:0 14px 14px 0;padding:12px 4px 10px;gap:4px}
+  .div::before{right:auto;bottom:0;width:4px;height:auto}
+  .div[aria-selected="true"]{transform:translateX(6px);border-radius:0 14px 14px 0}
+  .div[aria-selected="true"]::before{width:5px;height:auto;border-radius:0}
+  .dividers.six .div b{font-size:12px;letter-spacing:.2px}
+  .fab{bottom:calc(24px + env(safe-area-inset-bottom,0px));right:auto;left:calc(var(--rail) + var(--pane) - 76px)}
+  .undo{left:calc(var(--rail) + 16px);right:auto;width:calc(var(--pane) - 32px);bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+  .toast{left:calc(var(--rail) + var(--pane) + (100% - var(--rail) - var(--pane)) / 2);bottom:calc(90px + env(safe-area-inset-bottom,0px))}
+  #list li.on .swin,#list li.on > .item{background:color-mix(in srgb,var(--sec) 12%,var(--bg))}
+  #list li.on .item{box-shadow:inset 4px 0 0 var(--sec);padding-left:12px}
+  #list li.on.act .ckb{margin-left:12px}
+  /* the open page fills the right side instead of covering the list */
+  .reader,.rempty{left:calc(var(--rail) + var(--pane))}
+  .reader .dbody{max-width:760px;padding-inline:32px}
+  .reader .dbar{padding-inline:24px}
+  .rtools{left:calc(var(--rail) + var(--pane))}
+  .rtools .in{max-width:760px}
+  .rempty{position:fixed;top:0;right:0;bottom:0;display:grid;place-items:center;text-align:center;color:var(--muted);padding:24px}
+  .rempty[hidden]{display:none}
+  .rempty svg{width:56px;height:56px;stroke:var(--sec);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+  .rempty b{display:block;margin-top:10px;color:var(--ink);font-size:19px;font-weight:800}
+  .rempty span{font-size:15px;font-weight:600}
+  .sheet{max-width:640px}
+}
 </style>
 
 <div class="gate" id="gate" hidden>
@@ -516,6 +551,9 @@ html,body{touch-action:manipulation}   /* no double-tap zoom */
     </button>
   </div>
 </nav>
+
+<!-- landscape tablet: what the right side shows before anything is open -->
+<div class="rempty" id="rEmpty"><div><svg viewBox="0 0 24 24"><path d="M2 5c3-1.3 6-1.3 10 1 4-2.3 7-2.3 10-1v14c-3-1.3-6-1.3-10 1-4-2.3-7-2.3-10-1z"/><path d="M12 6v14"/></svg><b id="rEmptyT">Lyrics</b><span>Tap one in the list to open it here</span></div></div>
 
 <!-- reader -->
 <div class="reader" id="reader" hidden>
@@ -1026,6 +1064,9 @@ function useLocal(){
 }
 /* PocketBase on bkweb: same server and logins as Home Board. Each login sees only its own clippings. */
 const pb = new PocketBase(location.origin); pb.autoCancellation(false);
+// landscape tablet or laptop: list and open page side by side (same query as the CSS). Turning the tablet switches live.
+const WIDE = matchMedia('(min-width:1000px) and (orientation:landscape)');
+WIDE.addEventListener('change', () => { if(typeof render === 'function' && S.ready) render() });
 const FIELDS = ['type','title','by','genre','src','body','files','added','updated','tags','info','done'];
 function me(){ return pb.authStore.isValid && pb.authStore.record ? pb.authStore.record : null }
 function toItem(r){ const o = {id:r.id}; FIELDS.forEach(k => o[k] = r[k]); if(!Array.isArray(o.files)) o.files = []; if(!Array.isArray(o.tags)) o.tags = []; if(!o.info || typeof o.info !== 'object') o.info = {}; o.done = !!o.done; return o }
@@ -1784,7 +1825,9 @@ function genresFor(type){
   return [...m.values()].sort((a,b)=>a.localeCompare(b));
 }
 function render(){
+  if(S.open && WIDE.matches && S.open.type !== S.type){ closeReader(); return }   // side by side: a new section closes the other section's page
   document.body.dataset.type = S.open ? S.open.type : S.type;
+  $('rEmptyT').textContent = TYPES[S.type].label;
   $('upBtn').hidden = !assets || HBT.includes(S.type) || TAGGED.includes(S.type) || S.type === 'bins';   // bulk upload is for clippings; recipes and notes add files in Edit
   for(const t in TYPES){
     $('tab-'+t).setAttribute('aria-selected', String(t===S.type));
@@ -1850,7 +1893,8 @@ function render(){
     const inner = document.createElement('div'); inner.className = 'swin';
     while(li.firstChild) inner.appendChild(li.firstChild);
     inner.appendChild(b);
-    li.classList.add('sw'); li.append(swipeDel(li, inner, it), inner); list.appendChild(li);
+    li.classList.add('sw'); li.dataset.id = it.id; if(S.open && S.open.id === it.id) li.classList.add('on');
+    li.append(swipeDel(li, inner, it), inner); list.appendChild(li);
   });
   const empty = $('empty');
   empty.hidden = rows.length>0;
@@ -1983,10 +2027,12 @@ async function keepAwake(on){
 function openReader(it){
   S.open = it; S.tr = 0; setScroll(false);
   paintReader();
-  $('reader').hidden = false; $('reader').scrollTop = 0;
-  keepAwake(true);
+  $('reader').hidden = false; $('reader').scrollTop = 0; $('rEmpty').hidden = true;
+  markOpen(); keepAwake(true);
 }
-function closeReader(){ setScroll(false); paintToken++; $('reader').hidden = true; S.open = null; keepAwake(false); render() }
+function closeReader(){ setScroll(false); paintToken++; $('reader').hidden = true; $('rEmpty').hidden = false; S.open = null; keepAwake(false); render() }
+// landscape tablet: the list stays beside the open page, so show which row is open
+function markOpen(){ document.querySelectorAll('#list li[data-id]').forEach(li => li.classList.toggle('on', !!S.open && li.dataset.id === S.open.id)) }
 function tag(text, cls){ const s=document.createElement('span'); s.className='dtag'+(cls?' '+cls:''); s.textContent=text; return s }
 function paintRecipe(it, body){
   const acts = document.createElement('div'); acts.className = 'recacts';
@@ -2696,7 +2742,7 @@ document.addEventListener('keydown', e => {
 let sx=0, sy=0;
 document.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY }, {passive:true});
 document.addEventListener('touchend', e => {
-  if(S.open || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || e.target.closest('.dtags,.bottom,#list li.sw')) return;   // rows swipe to delete instead
+  if((S.open && (!WIDE.matches || e.target.closest('#reader'))) || !$('editor').hidden || !$('more').hidden || !$('upSheet').hidden || e.target.closest('.dtags,.bottom,#list li.sw')) return;   // rows swipe to delete instead
   const dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
   if(Math.abs(dx) < 60 || Math.abs(dy) > 45) return;
   const order = shownTabs(), i = order.indexOf(S.type);
